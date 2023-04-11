@@ -1,0 +1,16 @@
+<a href="@Href" class=" shadow-slate-900 drop-shadow-md bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded-lg"
+    onclick="@OnClickCallback">
+    @ChildContent
+</a>
+
+@code {
+
+    [Parameter]
+    public string? Href { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

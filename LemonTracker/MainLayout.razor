@@ -1,0 +1,20 @@
+﻿@inherits LayoutComponentBase
+
+<main class="min-h-full flex flex-col">
+    <nav class="flex bg-gray-800 p-3 gap-8 items-center">
+        <div>
+            <img src="svg/lemon-icon.svg" class="rounded-sm h-8 w-auto" alt="" />
+        </div>
+        <div class="flex gap-6 text-slate-300 text-sm font-mono">
+            <NavAnchor Href="/">Module Editor</NavAnchor>
+            <NavAnchor Href="#">Explorer</NavAnchor>
+        </div>
+    </nav>
+    <div class="p-4 text-slate-200 grow">
+        @Body
+    </div>
+</main>
+
+@code {
+    private bool _isMenuOpen;
+}

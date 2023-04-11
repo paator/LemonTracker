@@ -1,0 +1,34 @@
+@inherits ComponentBase
+
+@if (string.IsNullOrEmpty(Href))
+{
+    <button class="@ReturnVariantStyling()" onclick="@OnClickCallback" disabled="@IsDisabled">
+        @ChildContent
+    </button>
+}
+
+@code {
+    [Parameter]
+    public string? Href { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
+
+    [Parameter]
+    public bool IsDisabled { get; set; }
+
+    [Parameter]
+    public Variant Variant { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    private string ReturnVariantStyling()
+    {
+        return Variant switch
+        {
+            Variant.Default => string.Empty,
+            _ => string.Empty,
+        };
+    }
+}
