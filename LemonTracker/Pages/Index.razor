@@ -1,5 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Components.Forms
+@using LemonTracker.Converters
+@using LemonTracker.Models
 @inject IJSRuntime JsRuntime
+@inject IModuleConverter Converter
 @page "/"
 
 <div class="flex flex-col gap-6">
@@ -8,14 +11,18 @@
             Load Module
         </Button>
     </EditorMenu>
-    <ModuleEditor />
+    <ModuleEditor CurrentModule="_module" />
 </div>
 
 <InputFile id="picker" OnChange="@LoadModule" hidden/>
 
 @code {
-    private Task LoadModule(InputFileChangeEventArgs arg)
+    private Module? _module;
+    
+    private async Task LoadModule(InputFileChangeEventArgs arg)
     {
-        return Task.CompletedTask;
+        var ms = new MemoryStream();
+        await arg.File.OpenReadStream().CopyToAsync(ms);
+        _module = Converter.ConvertToLemonModule(ms);
     }
 }

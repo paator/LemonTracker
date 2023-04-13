@@ -4,5 +4,5 @@ namespace LemonTracker.Converters;
 
 public interface IModuleConverter
 {
-    Module? ConvertToLemonModule(FileStream moduleFile);
+    Module? ConvertToLemonModule(Stream moduleFile);
 }

@@ -1,3 +1,4 @@
+@using LemonTracker.Models
 <div class="bg-slate-600 self-center w-full rounded-xl shadow-slate-900 drop-shadow-md max-w-[1080px]">
     <div class="grid grid-flow-col text-yellow-400 text-center">
         <div class="col-auto">Channel A</div>
@@ -7,5 +8,6 @@
 </div>
 
 @code {
-
+    [Parameter]
+    public Module? CurrentModule { get; set; }
 }

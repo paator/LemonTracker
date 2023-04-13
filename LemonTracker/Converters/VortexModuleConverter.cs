@@ -9,10 +9,11 @@ namespace LemonTracker.Converters;
 
 public class VortexModuleConverter : IModuleConverter
 {
-    public Module? ConvertToLemonModule(FileStream moduleFile)
+    public Module? ConvertToLemonModule(Stream moduleFile)
     {
         var module = new Module();
 
+        moduleFile.Position = 0;
         using var reader = new StreamReader(moduleFile);
 
         string? line;
