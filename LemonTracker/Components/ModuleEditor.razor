@@ -1,5 +1,22 @@
 @using LemonTracker.Models
-<div class="bg-slate-600 self-center w-full rounded-xl shadow-slate-900 drop-shadow-md max-w-[1080px]">
+<div class="px-4 bg-slate-600 self-center w-full rounded-xl shadow-slate-900 drop-shadow-md max-w-[1080px]">
+    <div class="flex py-6 gap-4 text-slate-900 font-mono text-sm">
+        <div class="grow">
+            <span class="text-slate-400">Title:</span>
+            <input class="mt-2 block w-full bg-white rounded-md text-sm shadow-sm" value="@CurrentModule.Title"/>
+        </div>
+        <div class="grow">
+            <span class="text-slate-400">Author:</span>
+            <input class="mt-2 block w-full bg-white rounded-md text-sm shadow-sm" value="@CurrentModule.Author"/>
+        </div>
+    </div>
+    <div class="flex overflow-auto text-center text-lg shadow-slate-900 font-mono gap-3">
+        @foreach (var pattern in CurrentModule.Patterns)
+        {
+            <div class="flex-shrink-0 w-8 hover:bg-slate-400 rounded-sm cursor-pointer bg-slate-500 text-slate-900 border border-slate-400">@pattern.Number</div>
+        }
+    </div>
+    <div class="my-2 border border-gray-500 rounded-md"></div>
     <div class="grid grid-flow-col text-yellow-400 text-center">
         <div class="col-auto">Channel A</div>
         <div class="col-auto">Channel B</div>
@@ -8,6 +25,8 @@
 </div>
 
 @code {
+
     [Parameter]
-    public Module? CurrentModule { get; set; }
+    public Module CurrentModule { get; set; } = new();
+
 }

@@ -17,7 +17,7 @@
 <InputFile id="picker" OnChange="@LoadModule" hidden/>
 
 @code {
-    private Module? _module;
+    private Module? _module = new();
     
     private async Task LoadModule(InputFileChangeEventArgs arg)
     {
