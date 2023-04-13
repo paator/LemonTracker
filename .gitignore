@@ -3,7 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
-*.min.css
+# Minified css
+LemonTracker/wwwroot/css/app.min.css
+.idea
 
 # User-specific files
 *.rsuser
