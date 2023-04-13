@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "buildcss": "tailwindcss -i wwwroot/css/app.css -o wwwroot/css/app.min.css --watch --minify"
+    "buildcss": "tailwindcss -i wwwroot/css/app.css -o wwwroot/css/app.min.css --watch"
   },
   "author": "",
   "license": "ISC",

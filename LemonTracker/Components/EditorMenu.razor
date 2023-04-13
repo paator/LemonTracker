@@ -1,0 +1,8 @@
+﻿<div class="flex bg-zinc-700 drop-shadow-md rounded-lg p-4">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

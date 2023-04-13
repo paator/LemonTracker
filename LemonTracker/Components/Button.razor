@@ -1,15 +1,8 @@
-@inherits ComponentBase
-
-@if (string.IsNullOrEmpty(Href))
-{
-    <button class="@ReturnVariantStyling()" onclick="@OnClickCallback" disabled="@IsDisabled">
-        @ChildContent
-    </button>
-}
+<button class="@ReturnVariantStyling()" @onclick="@OnClickCallback" disabled="@IsDisabled">
+    @ChildContent
+</button>
 
 @code {
-    [Parameter]
-    public string? Href { get; set; }
 
     [Parameter]
     public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
@@ -23,12 +16,9 @@
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
-    private string ReturnVariantStyling()
+    private string ReturnVariantStyling() => Variant switch 
     {
-        return Variant switch
-        {
-            Variant.Default => string.Empty,
-            _ => string.Empty,
-        };
-    }
+        Variant.Default => "shadow-slate-900 drop-shadow-md bg-gray-600 hover:bg-gray-500 px-2 py-1 rounded-lg font-mono",
+        _ => string.Empty
+    };
 }

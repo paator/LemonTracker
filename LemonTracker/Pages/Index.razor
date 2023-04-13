@@ -1,6 +1,21 @@
-﻿@page "/"
+﻿@using Microsoft.AspNetCore.Components.Forms
+@inject IJSRuntime JsRuntime
+@page "/"
 
-<div class="flex flex-col my-12">
-    <p>This is a module editor!:D</p>
+<div class="flex flex-col gap-6">
+    <EditorMenu>
+        <Button OnClickCallback="@(() => JsRuntime.InvokeVoidAsync("clickHiddenPicker"))">
+            Load Module
+        </Button>
+    </EditorMenu>
     <ModuleEditor />
 </div>
+
+<InputFile id="picker" OnChange="@LoadModule" hidden/>
+
+@code {
+    private Task LoadModule(InputFileChangeEventArgs arg)
+    {
+        return Task.CompletedTask;
+    }
+}
