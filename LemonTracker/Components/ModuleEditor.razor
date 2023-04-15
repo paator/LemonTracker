@@ -1,32 +1,79 @@
 @using LemonTracker.Models
+@using Microsoft.AspNetCore.Components.Rendering
 <div class="px-4 bg-slate-600 self-center w-full rounded-xl shadow-slate-900 drop-shadow-md max-w-[1080px]">
     <div class="flex py-6 gap-4 text-slate-900 font-mono text-sm">
         <div class="grow">
             <span class="text-slate-400">Title:</span>
-            <input class="mt-2 block w-full bg-white rounded-md text-sm shadow-sm" value="@CurrentModule?.Title"/>
+            <input class="mt-2 block w-full bg-white rounded-md text-sm shadow-sm" value="@CurrentModule.Title"/>
         </div>
         <div class="grow">
             <span class="text-slate-400">Author:</span>
-            <input class="mt-2 block w-full bg-white rounded-md text-sm shadow-sm" value="@CurrentModule?.Author"/>
+            <input class="mt-2 block w-full bg-white rounded-md text-sm shadow-sm" value="@CurrentModule.Author"/>
         </div>
     </div>
     <div class="flex overflow-auto text-center text-lg shadow-slate-900 font-mono gap-1">
-        @foreach (var pattern in CurrentModule.Patterns)
+        @for (var index = 0; index < CurrentModule?.Patterns.Count; index++)
         {
-            <div class="flex-shrink-0 w-8 hover:bg-slate-400 rounded-sm cursor-pointer bg-slate-500 text-slate-900 border border-slate-400">@pattern.Number</div>
+            var indexCopy = index;
+            var pattern = CurrentModule?.Patterns[indexCopy];
+            <div
+                @onclick="@(() => SwitchPattern(indexCopy))"
+                class="flex-shrink-0 w-8 hover:bg-slate-400 rounded-sm cursor-pointer bg-slate-500 text-slate-900 border border-slate-400">
+                @pattern?.Number
+            </div>
         }
     </div>
     <div class="my-2 border border-gray-500 rounded-md"></div>
-    <div class="grid grid-flow-col text-yellow-400 text-center">
-        <div class="col-auto">Channel A</div>
-        <div class="col-auto">Channel B</div>
-        <div class="col-auto">Channel C</div>
+    <div class="font-mono text-slate-400 grid grid-cols-[80px,60px,auto,auto,auto]">
+        <div class="">Envelope</div>
+        <div class="">Noise</div>
+        <div>
+            Channel A
+            <div>
+                @foreach (var row in CurrentPattern.Channels[0].ChannelRows)
+                {
+                    <div>@row.NoteData  @row.Instrument@row.Envelope@row.Ornament@row.Volume</div>
+                }
+            </div>
+        </div>
+        <div>
+            Channel B
+            <div>
+                @foreach (var row in CurrentPattern.Channels[1].ChannelRows)
+                {
+                    <div>@row.NoteData  @row.Instrument@row.Envelope@row.Ornament@row.Volume</div>
+                }
+            </div>
+        </div>
+        <div>
+            Channel C
+            <div>
+                @foreach (var row in CurrentPattern.Channels[2].ChannelRows)
+                {
+                    <div>@row.NoteData  @row.Instrument@row.Envelope@row.Ornament@row.Volume</div>
+                }
+            </div>
+        </div>
     </div>
 </div>
 
 @code {
 
     [Parameter]
-    public Module? CurrentModule { get; set; } = new();
+    [EditorRequired]
+    public Module CurrentModule { get; set; } = default!;
+
+    private Pattern CurrentPattern { get; set; } = new();
+
+    protected override Task OnInitializedAsync()
+    {
+        CurrentPattern = CurrentModule.Patterns[0];
+        return base.OnInitializedAsync();
+    }
+
+    private void SwitchPattern(int index)
+    {
+        CurrentPattern = CurrentModule.Patterns[index];
+    }
 
 }
