@@ -133,6 +133,8 @@ public class VortexModuleConverter : IModuleConverter
                 if (!isParsedCorrectly) noiseValue = 0;
 
                 patternRow.NoiseValue = noiseValue;
+                
+                patterns[i].PatternRows.Add(patternRow);
 
                 //Channel A
                 var trimmedRowData = sWhitespace.Replace(rowValues[2], string.Empty);

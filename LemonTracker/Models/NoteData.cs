@@ -27,6 +27,6 @@ public class NoteData
             _ => "--"
         };
         
-        return $"{noteString}{(Note == Note.None ? "-" : Octave)}";
+        return $"{noteString}{(Note is Note.None or Note.Off ? "-" : Octave)}";
     }
 }

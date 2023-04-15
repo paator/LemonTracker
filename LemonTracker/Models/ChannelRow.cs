@@ -8,7 +8,7 @@ public class ChannelRow
     public char? Ornament { get; set; }
     public char? Envelope { get; set; }
     public NoteData? NoteData { get; set; }
-    public bool HasData => NoteData?.Note != Note.None;
+    public bool HasNoteData => NoteData?.Note != Note.None;
     public char? Volume { get; set; }
     public char? Effect { get; set; }
     public char? EffectParamX { get; set; }

@@ -1,5 +1,6 @@
 @using LemonTracker.Models
 @using Microsoft.AspNetCore.Components.Rendering
+@using LemonTracker.Extensions
 
 <div class="px-4 bg-slate-600 self-center w-full rounded-xl shadow-slate-900 drop-shadow-md max-w-[1080px]">
     <div class="flex py-6 gap-4 text-slate-900 font-mono text-sm">
@@ -52,7 +53,7 @@
                     @foreach (var row in CurrentPattern.PatternRows)
                     {
                         <tr>
-                            <td>@row.EnvelopeValue</td>
+                            <td>@row.EnvelopeValue.ToString("X4")</td>
                         </tr>
                     }
                 </table>
@@ -62,7 +63,7 @@
                     @foreach (var row in CurrentPattern.PatternRows)
                     {
                         <tr>
-                            <td>@row.NoiseValue</td>
+                            <td>@row.NoiseValue.ToString("X2")</td>
                         </tr>
                     }
                 </table>
@@ -110,15 +111,15 @@
                     @foreach (var row in value.ChannelRows)
                     {
                         <tr @key="row">
-                            <td class="@(row.HasData ? "text-slate-100" : "text-slate-500")">@row.NoteData</td>
-                            <td class="@(row.Instrument != '.' ? "text-blue-300" : "text-slate-500")">@(row.Instrument)</td>
-                            <td class="@(row.Envelope != '.' ? "text-blue-300" : "text-slate-500")">@(row.Envelope)</td>
-                            <td class="@(row.Ornament != '.' ? "text-blue-300" : "text-slate-500")">@(row.Ornament)</td>
-                            <td class="@(row.Volume != '.' ? "text-blue-300" : "text-slate-500")">@(row.Volume)</td>
-                            <td class="@(row.Effect != '.' ? "text-yellow-300" : "text-slate-500")">@(row.Effect)</td>
-                            <td class="@(row.EffectParamX != '.' ? "text-yellow-300" : "text-slate-500")">@(row.EffectParamX)</td>
-                            <td class="@(row.EffectParamY != '.' ? "text-yellow-300" : "text-slate-500")">@(row.EffectParamY)</td>
-                            <td class="@(row.EffectParamZ != '.' ? "text-yellow-300" : "text-slate-500")">@(row.EffectParamZ)</td>
+                            <td class="@DisplayActiveOrInactive(row.HasNoteData, "text-slate-100")">@row.NoteData</td>
+                            <td class="@DisplayActiveOrInactive(!row.Instrument.IsEmptyValue(), "text-blue-300")">@row.Instrument</td>
+                            <td class="@DisplayActiveOrInactive(!row.Envelope.IsEmptyValue(), "text-blue-300")">@row.Envelope</td>
+                            <td class="@DisplayActiveOrInactive(!row.Ornament.IsEmptyValue(), "text-blue-300", "text-slate-500")">@row.Ornament</td>
+                            <td class="@DisplayActiveOrInactive(!row.Volume.IsEmptyValue(), "text-blue-300", "text-slate-500")">@row.Volume</td>
+                            <td class="@DisplayActiveOrInactive(!row.Effect.IsEmptyValue(), "text-yellow-300", "text-slate-500")">@row.Effect</td>
+                            <td class="@DisplayActiveOrInactive(!row.EffectParamX.IsEmptyValue(), "text-yellow-300", "text-slate-500")">@row.EffectParamX</td>
+                            <td class="@DisplayActiveOrInactive(!row.EffectParamY.IsEmptyValue(), "text-yellow-300", "text-slate-500")">@row.EffectParamY</td>
+                            <td class="@DisplayActiveOrInactive(!row.EffectParamZ.IsEmptyValue(), "text-yellow-300", "text-slate-500")">@row.EffectParamZ</td>
                         </tr>
                     }
                     </tbody>
@@ -126,4 +127,8 @@
             </td>;
     };
 
+    private static string DisplayActiveOrInactive(bool predicateValue, string activeClass, string inactiveClass = "text-slate-500")
+    {
+        return predicateValue ? activeClass : inactiveClass;
+    }
 }
