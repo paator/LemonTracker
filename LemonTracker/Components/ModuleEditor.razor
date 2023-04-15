@@ -25,6 +25,7 @@
         }
     </div>
     <table class="mx-auto my-4 bg-slate-700 drop-shadow-md border-separate border-spacing-2 rounded-lg font-mono text-slate-400 text-xl">
+        <thead>
         <tr class="text-sm text-yellow-200">
             <th></th>
             <th>Envelope</th>
@@ -33,13 +34,15 @@
             <th>Channel B</th>
             <th>Channel C</th>
         </tr>
+        </thead>
+        <tbody>
         <tr>
             <td>
                 <table>
                     @for (var i = 0; i < CurrentPattern.Channels[0].ChannelRows.Count; i++)
                     {
                         <tr>
-                            <td>@i</td>    
+                            <td>@i.ToString("X2")</td>
                         </tr>
                     }
                 </table>
@@ -59,6 +62,7 @@
             }
 
         </tr>
+        </tbody>
     </table>
 </div>
 
@@ -84,23 +88,24 @@
     {
         return
             @<td class="p-4" @key="value">
-                <table class="">
+                <table class="border-spacing-0 border-collapse">
+                    <tbody class="border-t border-transparent">
                     @foreach (var row in value.ChannelRows)
                     {
-                        <tr>
-                            <td class="text-slate-100">@row.NoteData</td>
-                            <td class="text-blue-300">@(row.Instrument)</td>
-                            <td class="text-blue-300">@(row.Envelope)</td>
-                            <td class="text-blue-300">@(row.Ornament)</td>
-                            <td class="text-blue-300">@(row.Volume)</td>
-                            <td class="text-yellow-200">@(row.Effect)</td>
-                            <td class="text-yellow-400">@(row.EffectParamX)</td>
-                            <td class="text-yellow-400">@(row.EffectParamY)</td>
-                            <td class="text-yellow-400">@(row.EffectParamZ)</td>
+                        <tr @key="row">
+                            <td class="@(row.HasData ? "text-slate-100" : "text-slate-500")">@row.NoteData</td>
+                            <td class="@(row.Instrument != '.' ? "text-blue-300" : "text-slate-500")">@(row.Instrument)</td>
+                            <td class="@(row.Envelope != '.' ? "text-blue-300" : "text-slate-500")">@(row.Envelope)</td>
+                            <td class="@(row.Ornament != '.' ? "text-blue-300" : "text-slate-500")">@(row.Ornament)</td>
+                            <td class="@(row.Volume != '.' ? "text-blue-300" : "text-slate-500")">@(row.Volume)</td>
+                            <td class="@(row.Effect != '.' ? "text-yellow-300" : "text-slate-500")">@(row.Effect)</td>
+                            <td class="@(row.EffectParamX != '.' ? "text-yellow-300" : "text-slate-500")">@(row.EffectParamX)</td>
+                            <td class="@(row.EffectParamY != '.' ? "text-yellow-300" : "text-slate-500")">@(row.EffectParamY)</td>
+                            <td class="@(row.EffectParamZ != '.' ? "text-yellow-300" : "text-slate-500")">@(row.EffectParamZ)</td>
                         </tr>
                     }
+                    </tbody>
                 </table>
             </td>;
     };
-
 }

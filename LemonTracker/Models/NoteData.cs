@@ -24,9 +24,9 @@ public class NoteData
             Note.Asharp => "A#",
             Note.B => "B-",
             Note.Off => "R-",
-            _ => ".."
+            _ => "--"
         };
         
-        return $"{noteString}{(Note == Note.None ? "." : Octave)}";
+        return $"{noteString}{(Note == Note.None ? "-" : Octave)}";
     }
 }
