@@ -1,60 +1,65 @@
 @using LemonTracker.Models
 @using Microsoft.AspNetCore.Components.Rendering
+
 <div class="px-4 bg-slate-600 self-center w-full rounded-xl shadow-slate-900 drop-shadow-md max-w-[1080px]">
     <div class="flex py-6 gap-4 text-slate-900 font-mono text-sm">
         <div class="grow">
             <span class="text-slate-400">Title:</span>
-            <input class="mt-2 block w-full bg-white rounded-md text-sm shadow-sm" value="@CurrentModule.Title"/>
+            <input type="text" class="px-2 mt-2 block w-full bg-white rounded-md text-sm shadow-sm" value="@CurrentModule.Title"/>
         </div>
         <div class="grow">
             <span class="text-slate-400">Author:</span>
-            <input class="mt-2 block w-full bg-white rounded-md text-sm shadow-sm" value="@CurrentModule.Author"/>
+            <input type="text" class="px-2 mt-2 block w-full bg-white rounded-md text-sm shadow-sm" value="@CurrentModule.Author"/>
         </div>
     </div>
     <div class="flex overflow-auto text-center text-lg shadow-slate-900 font-mono gap-1">
-        @for (var index = 0; index < CurrentModule?.Patterns.Count; index++)
+        @for (var index = 0; index < CurrentModule.Patterns.Count; index++)
         {
             var indexCopy = index;
-            var pattern = CurrentModule?.Patterns[indexCopy];
+            var pattern = CurrentModule.Patterns[indexCopy];
             <div
                 @onclick="@(() => SwitchPattern(indexCopy))"
                 class="flex-shrink-0 w-8 hover:bg-slate-400 rounded-sm cursor-pointer bg-slate-500 text-slate-900 border border-slate-400">
-                @pattern?.Number
+                @pattern.Number
             </div>
         }
     </div>
-    <div class="my-2 border border-gray-500 rounded-md"></div>
-    <div class="font-mono text-slate-400 grid grid-cols-[80px,60px,auto,auto,auto]">
-        <div class="">Envelope</div>
-        <div class="">Noise</div>
-        <div>
-            Channel A
-            <div>
-                @foreach (var row in CurrentPattern.Channels[0].ChannelRows)
-                {
-                    <div>@row.NoteData  @row.Instrument@row.Envelope@row.Ornament@row.Volume</div>
-                }
-            </div>
-        </div>
-        <div>
-            Channel B
-            <div>
-                @foreach (var row in CurrentPattern.Channels[1].ChannelRows)
-                {
-                    <div>@row.NoteData  @row.Instrument@row.Envelope@row.Ornament@row.Volume</div>
-                }
-            </div>
-        </div>
-        <div>
-            Channel C
-            <div>
-                @foreach (var row in CurrentPattern.Channels[2].ChannelRows)
-                {
-                    <div>@row.NoteData  @row.Instrument@row.Envelope@row.Ornament@row.Volume</div>
-                }
-            </div>
-        </div>
-    </div>
+    <table class="mx-auto my-4 bg-slate-700 drop-shadow-md border-separate border-spacing-2 rounded-lg font-mono text-slate-400 text-xl">
+        <tr class="text-sm text-yellow-200">
+            <th></th>
+            <th>Envelope</th>
+            <th>Noise</th>
+            <th>Channel A</th>
+            <th>Channel B</th>
+            <th>Channel C</th>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    @for (var i = 0; i < CurrentPattern.Channels[0].ChannelRows.Count; i++)
+                    {
+                        <tr>
+                            <td>@i</td>    
+                        </tr>
+                    }
+                </table>
+            </td>
+            <td class="p-4">
+                <table>
+                </table>
+            </td>
+            <td class="p-4">
+                <table>
+                </table>
+            </td>
+
+            @foreach (var channel in CurrentPattern.Channels)
+            {
+                @_renderChannel(channel)
+            }
+
+        </tr>
+    </table>
 </div>
 
 @code {
@@ -65,15 +70,37 @@
 
     private Pattern CurrentPattern { get; set; } = new();
 
-    protected override Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         CurrentPattern = CurrentModule.Patterns[0];
-        return base.OnInitializedAsync();
     }
 
     private void SwitchPattern(int index)
     {
         CurrentPattern = CurrentModule.Patterns[index];
     }
+
+    private RenderFragment<Channel> _renderChannel = value =>
+    {
+        return
+            @<td class="p-4" @key="value">
+                <table class="">
+                    @foreach (var row in value.ChannelRows)
+                    {
+                        <tr>
+                            <td class="text-slate-100">@row.NoteData</td>
+                            <td class="text-blue-300">@(row.Instrument)</td>
+                            <td class="text-blue-300">@(row.Envelope)</td>
+                            <td class="text-blue-300">@(row.Ornament)</td>
+                            <td class="text-blue-300">@(row.Volume)</td>
+                            <td class="text-yellow-200">@(row.Effect)</td>
+                            <td class="text-yellow-400">@(row.EffectParamX)</td>
+                            <td class="text-yellow-400">@(row.EffectParamY)</td>
+                            <td class="text-yellow-400">@(row.EffectParamZ)</td>
+                        </tr>
+                    }
+                </table>
+            </td>;
+    };
 
 }

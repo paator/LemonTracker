@@ -171,9 +171,9 @@ public class VortexModuleConverter : IModuleConverter
         {
             NoteData = trimmedRowData[..3].ToModuleNote(),
             Instrument = trimmedRowData[3],
-            Envelope = trimmedRowData[4].HexToInt(),
-            Ornament = trimmedRowData[5].HexToInt(),
-            Volume = trimmedRowData[6].HexToInt(),
+            Envelope = trimmedRowData[4],
+            Ornament = trimmedRowData[5],
+            Volume = trimmedRowData[6],
             Effect = trimmedRowData[7],
             EffectParamX = trimmedRowData[8],
             EffectParamY = trimmedRowData[9],
