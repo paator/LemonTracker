@@ -47,12 +47,24 @@
                     }
                 </table>
             </td>
-            <td class="p-4">
+            <td>
                 <table>
+                    @foreach (var row in CurrentPattern.PatternRows)
+                    {
+                        <tr>
+                            <td>@row.EnvelopeValue</td>
+                        </tr>
+                    }
                 </table>
             </td>
-            <td class="p-4">
+            <td>
                 <table>
+                    @foreach (var row in CurrentPattern.PatternRows)
+                    {
+                        <tr>
+                            <td>@row.NoiseValue</td>
+                        </tr>
+                    }
                 </table>
             </td>
 
@@ -68,17 +80,22 @@
 
 @code {
 
+    private Module _currentModule = default!;
+    
     [Parameter]
     [EditorRequired]
-    public Module CurrentModule { get; set; } = default!;
-
-    private Pattern CurrentPattern { get; set; } = new();
-
-    protected override void OnInitialized()
+    public Module CurrentModule
     {
-        CurrentPattern = CurrentModule.Patterns[0];
+        get => _currentModule;
+        set
+        {
+            _currentModule = value;
+            SwitchPattern(0);
+        }
     }
 
+    private Pattern CurrentPattern { get; set; } = new();
+    
     private void SwitchPattern(int index)
     {
         CurrentPattern = CurrentModule.Patterns[index];
@@ -108,4 +125,5 @@
                 </table>
             </td>;
     };
+
 }
