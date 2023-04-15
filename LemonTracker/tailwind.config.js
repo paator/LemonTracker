@@ -13,6 +13,9 @@ module.exports = {
 
             sm: { max: "639px" },
             // => @media (max-width: 639px) { ... }
+        },
+        fontFamily: {
+            'mono': ['JetBrains\\ Mono'],
         }
     },
     content: ["./**/*.html", "./**/*.razor", "./**/*.cshtml"],
