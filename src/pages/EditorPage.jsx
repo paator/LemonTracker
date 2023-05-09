@@ -10,13 +10,11 @@ function EditorPage() {
     fileLoaderInput.current.click();
   }
 
-  function handleFileSelect(event) {
+  async function handleFileSelect(event) {
     const file = event.target.files[0];
     const converter = new VortexModuleConverter();
 
-    const lemonModule = converter.convertToLemonModule(file);
-
-    console.log(lemonModule.title);
+    const lemonModule = await converter.convertToLemonModule(new Blob([file], {type: file.type}));
   }
 
   return (
