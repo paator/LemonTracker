@@ -1,9 +1,11 @@
+import Pattern from "./pattern.js";
+
 export default class Module {
   constructor(
     title = "",
     author = "",
     initSpeed = 3,
-    patterns = [],
+    patterns = [new Pattern()],
     samples = [],
     ornaments = []
   ) {
