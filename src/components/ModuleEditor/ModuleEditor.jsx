@@ -41,9 +41,7 @@ function ModuleEditor({ currentModule }) {
             type="text"
             className="px-2 mt-2 block w-full bg-white rounded-md text-sm shadow-sm"
             value={module.author}
-            onChange={(e) => {
-              setModule({ ...module, author: e.target.value });
-            }}
+            onChange={changeModuleProp("author")}
           />
         </div>
       </div>
