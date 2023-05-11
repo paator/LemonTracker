@@ -1,14 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function ModuleEditor({ currentModule }) {
+  const [module, setModule] = useState({ ...currentModule });
   const [currentPattern, setCurrentPattern] = useState(
     currentModule.patterns[0]
   );
   const [currentPatternIndex, setCurrentPatternIndex] = useState(0);
 
+  useEffect(() => {
+    setModule({ ...currentModule });
+    changePattern(0);
+  }, [currentModule]);
+
   function changePattern(index) {
     setCurrentPattern(currentModule.patterns[index]);
     setCurrentPatternIndex(index);
+  }
+
+  function changeModuleProp(field) {
+    return (e) => {
+      setModule({ ...module, [field]: e.target.value });
+    };
   }
 
   return (
@@ -19,7 +31,8 @@ function ModuleEditor({ currentModule }) {
           <input
             type="text"
             className="px-2 mt-2 block w-full bg-white rounded-md text-sm shadow-sm"
-            value={currentModule.title}
+            value={module.title}
+            onChange={changeModuleProp("title")}
           />
         </div>
         <div className="grow">
@@ -27,12 +40,15 @@ function ModuleEditor({ currentModule }) {
           <input
             type="text"
             className="px-2 mt-2 block w-full bg-white rounded-md text-sm shadow-sm"
-            value={currentModule.author}
+            value={module.author}
+            onChange={(e) => {
+              setModule({ ...module, author: e.target.value });
+            }}
           />
         </div>
       </div>
       <div className="flex overflow-auto text-center text-xl shadow-slate-900 font-mono gap-[2px]">
-        {currentModule.patterns.map((p, i) =>
+        {module.patterns.map((p, i) =>
           currentPatternIndex === i ? (
             <div
               key={i}
