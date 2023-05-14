@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import Channel from "./Channel.jsx";
+import Cell from "./Cell.jsx";
+import CellGroup from "./CellGroup.jsx";
 
 function ModuleEditor({ currentModule }) {
   const [module, setModule] = useState({ ...currentModule });
@@ -66,23 +68,39 @@ function ModuleEditor({ currentModule }) {
           )
         )}
       </div>
-      <div className="flex flex-row justify-evenly grid-rows gap-4 mx-auto my-4 bg-slate-700 drop-shadow-md rounded-lg font-mono text-slate-400 text-xl">
+      <div className="grid grid-cols-[0.1fr,0.1fr,0.1fr,2fr,2fr,2fr] w-fit mx-auto gap-4 px-4 py-2 my-4 bg-slate-700 drop-shadow-md rounded-lg font-mono text-slate-400 text-lg text-center">
         <div>
           <div className="text-sm text-yellow-200">.</div>
           {currentPattern.patternRows.map((row, i) => (
-            <div key={row.id}>{i.toString(16).toUpperCase()}</div>
+            <div key={row.id}>
+              {i.toString(16).padStart(2, "0").toUpperCase()}
+            </div>
           ))}
         </div>
         <div>
           <div className="text-sm text-yellow-200">Envelope</div>
           {currentPattern.patternRows.map((row) => (
-            <div key={row.id}>{row.envelopeValue}</div>
+            <CellGroup
+              key={row.id}
+              id={row.id}
+              maxLength={4}
+              radix={16}
+              str={row.envelopeValue.toString()}
+              defaultCellStr="."
+            />
           ))}
         </div>
         <div>
           <div className="text-sm text-yellow-200">Noise</div>
           {currentPattern.patternRows.map((row) => (
-            <div key={row.id}>{row.noiseValue}</div>
+            <CellGroup
+              key={row.id}
+              id={row.id}
+              maxLength={4}
+              radix={16}
+              str={row.noiseValue.toString()}
+              defaultCellStr="."
+            />
           ))}
         </div>
         {currentPattern.channels.map((ch, i) => (

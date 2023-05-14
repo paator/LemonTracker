@@ -1,5 +1,6 @@
 export default class NoteData {
   constructor(note, octave) {
+    this.id = crypto.randomUUID();
     this.note = note;
     this.octave = octave;
   }
