@@ -1,7 +1,15 @@
-import React from "react";
+function Channel({ channelName, channelRows, index }) {
+  const letters = ["A", "B", "C"];
+  const letter = letters[index % 3];
 
-function Channel(props) {
-  return <> </>;
+  return (
+    <div>
+      <div className="text-sm text-yellow-200">{channelName + " " + letter}</div>
+      {channelRows.map((row) => (
+        <div key={row.id}>row.noteData</div>
+      ))}
+    </div>
+  );
 }
 
 export default Channel;

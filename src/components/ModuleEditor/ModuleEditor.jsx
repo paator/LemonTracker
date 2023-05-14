@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Channel from "./Channel.jsx";
 
 function ModuleEditor({ currentModule }) {
   const [module, setModule] = useState({ ...currentModule });
@@ -58,12 +59,40 @@ function ModuleEditor({ currentModule }) {
             <div
               key={i}
               onClick={() => changePattern(i)}
-              class="flex-shrink-0 w-8 hover:bg-slate-400 rounded-sm cursor-pointer bg-slate-500 text-slate-900 border border-slate-400"
+              className="flex-shrink-0 w-8 hover:bg-slate-400 rounded-sm cursor-pointer bg-slate-500 text-slate-900 border border-slate-400"
             >
               {p.number}
             </div>
           )
         )}
+      </div>
+      <div className="flex flex-row justify-evenly grid-rows gap-4 mx-auto my-4 bg-slate-700 drop-shadow-md rounded-lg font-mono text-slate-400 text-xl">
+        <div>
+          <div className="text-sm text-yellow-200">.</div>
+          {currentPattern.patternRows.map((row, i) => (
+            <div key={row.id}>{i.toString(16).toUpperCase()}</div>
+          ))}
+        </div>
+        <div>
+          <div className="text-sm text-yellow-200">Envelope</div>
+          {currentPattern.patternRows.map((row) => (
+            <div key={row.id}>{row.envelopeValue}</div>
+          ))}
+        </div>
+        <div>
+          <div className="text-sm text-yellow-200">Noise</div>
+          {currentPattern.patternRows.map((row) => (
+            <div key={row.id}>{row.noiseValue}</div>
+          ))}
+        </div>
+        {currentPattern.channels.map((ch, i) => (
+          <Channel
+            key={ch.id}
+            channelRows={ch.channelRows}
+            channelName={"Channel"}
+            index={i}
+          />
+        ))}
       </div>
     </div>
   );

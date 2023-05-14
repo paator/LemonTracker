@@ -12,6 +12,7 @@ export default class ChannelRow {
     effectParamY = "",
     effectParamZ = ""
   ) {
+    this.id = crypto.randomUUID();
     this.instrument = instrument;
     this.ornament = ornament;
     this.envelope = envelope;

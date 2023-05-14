@@ -5,7 +5,7 @@ export default class Module {
     title = "",
     author = "",
     initSpeed = 3,
-    patterns = [new Pattern()],
+    patterns = [new Pattern(undefined, undefined, new Array(64))],
     samples = [],
     ornaments = []
   ) {

@@ -9,6 +9,10 @@ function EditorPage() {
   const fileLoaderInput = useRef(null);
   const [currentModule, updateCurrentModule] = useState(new Module());
 
+  function newModule() {
+    updateCurrentModule(new Module());
+  }
+
   function loadModule() {
     fileLoaderInput.current.click();
   }
@@ -26,7 +30,7 @@ function EditorPage() {
     <>
       <div className="flex flex-col gap-6">
         <EditorMenu>
-          <EditorButton>New Track</EditorButton>
+          <EditorButton onClick={newModule}>New Track</EditorButton>
           <EditorButton onClick={loadModule}>Load Module</EditorButton>
         </EditorMenu>
         <ModuleEditor currentModule={currentModule}/>

@@ -7,7 +7,7 @@ import ChannelRow from "../models/channel-row";
 export default class VortexModuleConverter {
   convertToLemonModule(moduleFile) {
     return new Promise((resolve, reject) => {
-      const module = new Module();
+      const module = new Module("", "", 3, []);
       const fileReader = new FileReader();
 
       fileReader.onerror = () => {
