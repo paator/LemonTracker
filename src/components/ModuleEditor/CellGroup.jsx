@@ -6,12 +6,7 @@ function CellGroup({ maxLength, radix, value, defaultCellStr }) {
 
   function createValueWithDefaultPrefix() {
     const num = value === 0 ? "" : value.toString(radix).toUpperCase();
-    let prefix = "";
-    if (num.length < maxLength) {
-      prefix = defaultCellStr.repeat(maxLength - num.length);
-    }
-
-    return prefix + num;
+    return num.padStart(maxLength, defaultCellStr);
   }
 
   useEffect(() => {
