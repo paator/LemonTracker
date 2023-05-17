@@ -1,6 +1,6 @@
 function Cell({ str, defaultDisplayValue, id }) {
   function displayValueOrDefault(obj) {
-    if (obj === null) {
+    if (obj === null || obj === undefined || obj === "") {
       return defaultDisplayValue;
     }
 

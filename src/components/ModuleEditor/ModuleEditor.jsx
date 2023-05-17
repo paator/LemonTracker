@@ -68,7 +68,10 @@ function ModuleEditor({ currentModule }) {
           )
         )}
       </div>
-      <div className="grid grid-cols-[0.1fr,0.1fr,0.1fr,2fr,2fr,2fr] w-fit mx-auto gap-4 px-4 py-2 my-4 bg-slate-700 drop-shadow-md rounded-lg font-mono text-slate-400 text-lg text-center">
+      <div
+        className="[&>*]:px-3 divide-x-2 divide-slate-800 grid grid-cols-[0.1fr,0.1fr,0.1fr,2fr,2fr,2fr] w-fit mx-auto
+          px-4 py-2 my-4 bg-slate-700 drop-shadow-md rounded-lg font-mono text-slate-400 text-lg text-center"
+      >
         <div>
           <div className="text-sm text-yellow-200">.</div>
           {currentPattern.patternRows.map((row, i) => (
@@ -96,7 +99,7 @@ function ModuleEditor({ currentModule }) {
             <CellGroup
               key={row.id}
               id={row.id}
-              maxLength={4}
+              maxLength={2}
               radix={16}
               str={row.noiseValue.toString()}
               defaultCellStr="."
