@@ -1,7 +1,7 @@
 import Cell from "./Cell.jsx";
 import { useEffect, useState } from "react";
 
-function CellGroup({ id, maxLength, radix, str, defaultCellStr }) {
+function CellGroup({ maxLength, radix, str, defaultCellStr }) {
   const [valueWithDefaultPrefix, setValueWithDefaultPrefix] = useState(createValueWithDefaultPrefix);
 
   function createValueWithDefaultPrefix() {
@@ -20,8 +20,8 @@ function CellGroup({ id, maxLength, radix, str, defaultCellStr }) {
 
   return (
     <div>
-      {valueWithDefaultPrefix.split("").map((char) => (
-        <Cell defaultDisplayValue={defaultCellStr} key={id} id={id} str={char} />
+      {valueWithDefaultPrefix.split("").map((char, i) => (
+        <Cell defaultDisplayValue={defaultCellStr} key={i} str={char} />
       ))}
     </div>
   );

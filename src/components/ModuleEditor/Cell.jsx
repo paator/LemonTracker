@@ -1,4 +1,4 @@
-function Cell({ str, defaultDisplayValue, id }) {
+function Cell({ str, defaultDisplayValue }) {
   function displayValueOrDefault(obj) {
     if (obj === null || obj === undefined || obj === "") {
       return defaultDisplayValue;
@@ -7,7 +7,7 @@ function Cell({ str, defaultDisplayValue, id }) {
     return obj;
   }
 
-  return <span key={id}>{displayValueOrDefault(str)}</span>;
+  return <span>{displayValueOrDefault(str)}</span>;
 }
 
 export default Cell;

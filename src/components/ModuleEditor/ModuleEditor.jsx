@@ -75,17 +75,16 @@ function ModuleEditor({ currentModule }) {
         <div>
           <div className="text-sm text-yellow-200">.</div>
           {currentPattern.patternRows.map((row, i) => (
-            <div key={row.id}>
+            <div key={i}>
               {i.toString(16).padStart(2, "0").toUpperCase()}
             </div>
           ))}
         </div>
         <div>
           <div className="text-sm text-yellow-200">Envelope</div>
-          {currentPattern.patternRows.map((row) => (
+          {currentPattern.patternRows.map((row, i) => (
             <CellGroup
-              key={row.id}
-              id={row.id}
+              key={i}
               maxLength={4}
               radix={16}
               str={row.envelopeValue.toString()}
@@ -95,10 +94,9 @@ function ModuleEditor({ currentModule }) {
         </div>
         <div>
           <div className="text-sm text-yellow-200">Noise</div>
-          {currentPattern.patternRows.map((row) => (
+          {currentPattern.patternRows.map((row, i) => (
             <CellGroup
-              key={row.id}
-              id={row.id}
+              key={i}
               maxLength={2}
               radix={16}
               str={row.noiseValue.toString()}
@@ -108,7 +106,7 @@ function ModuleEditor({ currentModule }) {
         </div>
         {currentPattern.channels.map((ch, i) => (
           <Channel
-            key={ch.id}
+            key={i}
             channelRows={ch.channelRows}
             channelName={"Channel"}
             index={i}

@@ -9,64 +9,46 @@ function Channel({ channelName, channelRows, index }) {
       <div className="text-sm text-yellow-200">
         {channelName + " " + letter}
       </div>
-      {channelRows.map((row) => (
-        <div className="flex gap-4">
+      {channelRows.map((row, i) => (
+        <div key={i} className="flex gap-4">
           <Cell
             str={row.noteData.toString()}
             defaultDisplayValue="---"
-            key={row.noteData.id}
-            id={row.noteData.id}
           />
           <div>
             <Cell
               str={row.instrument.toString()}
               defaultDisplayValue="."
-              key={row.noteData.id}
-              id={row.noteData.id}
             />
             <Cell
               str={row.envelope.toString()}
               defaultDisplayValue="."
-              key={row.noteData.id}
-              id={row.noteData.id}
             />
             <Cell
               str={row.ornament.toString()}
               defaultDisplayValue="."
-              key={row.noteData.id}
-              id={row.noteData.id}
             />
             <Cell
               str={row.volume.toString()}
               defaultDisplayValue="."
-              key={row.noteData.id}
-              id={row.noteData.id}
             />
           </div>
           <div>
             <Cell
               str={row.effect.toString()}
               defaultDisplayValue="."
-              key={row.noteData.id}
-              id={row.noteData.id}
             />
             <Cell
               str={row.effectParamX.toString()}
               defaultDisplayValue="."
-              key={row.noteData.id}
-              id={row.noteData.id}
             />
             <Cell
               str={row.effectParamY.toString()}
               defaultDisplayValue="."
-              key={row.noteData.id}
-              id={row.noteData.id}
             />
             <Cell
               str={row.effectParamZ.toString()}
               defaultDisplayValue="."
-              key={row.noteData.id}
-              id={row.noteData.id}
             />
           </div>
         </div>
