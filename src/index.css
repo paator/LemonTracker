@@ -1,0 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    font-variant-ligatures: none;
+}
