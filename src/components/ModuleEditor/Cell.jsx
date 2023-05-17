@@ -7,7 +7,7 @@ function Cell({ str, defaultDisplayValue }) {
     return obj;
   }
 
-  return <span>{displayValueOrDefault(str)}</span>;
+  return <span className={str === defaultDisplayValue ? "text-slate-500" : ""}>{displayValueOrDefault(str)}</span>;
 }
 
 export default Cell;

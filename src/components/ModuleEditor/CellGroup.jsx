@@ -5,7 +5,7 @@ function CellGroup({ maxLength, radix, str, defaultCellStr }) {
   const [valueWithDefaultPrefix, setValueWithDefaultPrefix] = useState(createValueWithDefaultPrefix);
 
   function createValueWithDefaultPrefix() {
-    let num = str === "0" ? "" : Number(str).toString(radix).toUpperCase();
+    const num = str === "0" ? "" : Number(str).toString(radix).toUpperCase();
     let prefix = "";
     if (num.length < maxLength) {
       prefix = defaultCellStr.repeat(maxLength - num.length);
