@@ -6,7 +6,7 @@ export default class NoteData {
   }
 
   toString() {
-    return `${Note[this.note]}${
+    return `${this.note}${
       this.note === Note.None || this.note === Note.Off ? "-" : this.octave
     }`;
   }
@@ -16,15 +16,15 @@ export const Note = {
   None: "--",
   C: "C-",
   Csharp: "C#",
-  D: "D",
+  D: "D-",
   Dsharp: "D#",
-  E: "E",
-  F: "F",
+  E: "E-",
+  F: "F-",
   Fsharp: "F#",
-  G: "G",
+  G: "G-",
   Gsharp: "G#",
-  A: "A",
+  A: "A-",
   Asharp: "A#",
-  B: "B",
+  B: "B-",
   Off: "R-",
 };

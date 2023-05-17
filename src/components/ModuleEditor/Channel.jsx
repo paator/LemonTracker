@@ -10,14 +10,66 @@ function Channel({ channelName, channelRows, index }) {
         {channelName + " " + letter}
       </div>
       {channelRows.map((row) => (
-        <>
-          <Cell defaultDisplayValue="---" key={row.noteData.id} id={row.noteData.id}>
-            {row.noteData.toString()}
-          </Cell>
-          <Cell defaultDisplayValue="." key={row.id}>
-
-          </Cell>
-        </>
+        <div className="flex gap-4">
+          <Cell
+            str={row.noteData.toString()}
+            defaultDisplayValue="---"
+            key={row.noteData.id}
+            id={row.noteData.id}
+          />
+          <div>
+            <Cell
+              str={row.instrument.toString()}
+              defaultDisplayValue="."
+              key={row.noteData.id}
+              id={row.noteData.id}
+            />
+            <Cell
+              str={row.envelope.toString()}
+              defaultDisplayValue="."
+              key={row.noteData.id}
+              id={row.noteData.id}
+            />
+            <Cell
+              str={row.ornament.toString()}
+              defaultDisplayValue="."
+              key={row.noteData.id}
+              id={row.noteData.id}
+            />
+            <Cell
+              str={row.volume.toString()}
+              defaultDisplayValue="."
+              key={row.noteData.id}
+              id={row.noteData.id}
+            />
+          </div>
+          <div>
+            <Cell
+              str={row.effect.toString()}
+              defaultDisplayValue="."
+              key={row.noteData.id}
+              id={row.noteData.id}
+            />
+            <Cell
+              str={row.effectParamX.toString()}
+              defaultDisplayValue="."
+              key={row.noteData.id}
+              id={row.noteData.id}
+            />
+            <Cell
+              str={row.effectParamY.toString()}
+              defaultDisplayValue="."
+              key={row.noteData.id}
+              id={row.noteData.id}
+            />
+            <Cell
+              str={row.effectParamZ.toString()}
+              defaultDisplayValue="."
+              key={row.noteData.id}
+              id={row.noteData.id}
+            />
+          </div>
+        </div>
       ))}
     </div>
   );
