@@ -1,11 +1,11 @@
 import Cell from "./Cell.jsx";
 import { useEffect, useState } from "react";
 
-function CellGroup({ maxLength, radix, str, defaultCellStr }) {
+function CellGroup({ maxLength, radix, value, defaultCellStr }) {
   const [valueWithDefaultPrefix, setValueWithDefaultPrefix] = useState(createValueWithDefaultPrefix);
 
   function createValueWithDefaultPrefix() {
-    const num = str === "0" ? "" : Number(str).toString(radix).toUpperCase();
+    const num = value === 0 ? "" : value.toString(radix).toUpperCase();
     let prefix = "";
     if (num.length < maxLength) {
       prefix = defaultCellStr.repeat(maxLength - num.length);
@@ -16,7 +16,7 @@ function CellGroup({ maxLength, radix, str, defaultCellStr }) {
 
   useEffect(() => {
     setValueWithDefaultPrefix(createValueWithDefaultPrefix());
-  }, [str]);
+  }, [value]);
 
   return (
     <div>

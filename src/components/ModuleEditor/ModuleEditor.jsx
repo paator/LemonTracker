@@ -87,7 +87,7 @@ function ModuleEditor({ currentModule }) {
               key={i}
               maxLength={4}
               radix={16}
-              str={row.envelopeValue.toString()}
+              value={row.envelopeValue}
               defaultCellStr="."
             />
           ))}
@@ -99,7 +99,7 @@ function ModuleEditor({ currentModule }) {
               key={i}
               maxLength={2}
               radix={16}
-              str={row.noiseValue.toString()}
+              value={row.noiseValue}
               defaultCellStr="."
             />
           ))}
