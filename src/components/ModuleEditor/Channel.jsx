@@ -11,11 +11,13 @@ function Channel({ channelName, channelRows, index }) {
       </div>
       {channelRows.map((row, i) => (
         <div key={i} className="flex gap-4">
-          <Cell
-            str={row.noteData.toString()}
-            defaultDisplayValue="---"
-          />
-          <div>
+          <div className="text-blue-100">
+            <Cell
+              str={row.noteData.toString()}
+              defaultDisplayValue="---"
+            />
+          </div>
+          <div className="text-blue-300">
             <Cell
               str={row.instrument.toString()}
               defaultDisplayValue="."
@@ -33,7 +35,7 @@ function Channel({ channelName, channelRows, index }) {
               defaultDisplayValue="."
             />
           </div>
-          <div>
+          <div className="text-yellow-200">
             <Cell
               str={row.effect.toString()}
               defaultDisplayValue="."

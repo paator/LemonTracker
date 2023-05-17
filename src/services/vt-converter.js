@@ -173,10 +173,10 @@ export default class VortexModuleConverter {
     row.envelope = trimmedRowData[4];
     row.ornament = trimmedRowData[5];
     row.volume = trimmedRowData[6];
-    row.effect = trimmedRowData[7];
-    row.effectParamX = trimmedRowData[8];
-    row.effectParamY = trimmedRowData[9];
-    row.effectParamZ = trimmedRowData[10];
+    row.effect = trimmedRowData[8];
+    row.effectParamX = trimmedRowData[9];
+    row.effectParamY = trimmedRowData[10];
+    row.effectParamZ = trimmedRowData[11];
     return row;
   }
 

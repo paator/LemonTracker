@@ -75,7 +75,7 @@ function ModuleEditor({ currentModule }) {
         <div>
           <div className="text-sm text-yellow-200">.</div>
           {currentPattern.patternRows.map((row, i) => (
-            <div key={i}>
+            <div className="text-blue-300" key={i}>
               {i.toString(16).padStart(2, "0").toUpperCase()}
             </div>
           ))}
