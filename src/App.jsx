@@ -5,7 +5,7 @@ import lemonLogo from "./assets/lemon.svg";
 
 function App() {
   return (
-    <Router>
+    <Router basename={window.location.pathname.replace(/(\/[^/]*)$/, "")}>
       <main>
         <nav className="flex bg-gray-800 p-3 gap-10 items-center">
           <div className="flex gap-2 items-center">
