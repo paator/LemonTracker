@@ -52,7 +52,7 @@ function ModuleEditor({ currentModule }: ModuleEditorProps) {
           />
         </div>
       </div>
-      <div className="flex overflow-auto text-center font-mono text-xl shadow-slate-900 gap-[2px]">
+      <div className="flex overflow-auto text-center font-mono text-xl shadow-slate-900 gap-[2px] select-none">
         {module.patterns.map((p, i) =>
           currentPatternIndex === i ? (
             <div
@@ -74,7 +74,7 @@ function ModuleEditor({ currentModule }: ModuleEditorProps) {
       </div>
       <div
         className="divide-x-2 divide-slate-900 max-w-fit
-          [&>div>div:first-child]:py-2
+          [&>div>div:first-child]:py-2 select-none
           mx-auto flex my-4 bg-slate-800 drop-shadow-md rounded-xl font-mono text-slate-400 text-lg text-center"
       >
         <div className="[&>*:nth-child(4n+2)]:bg-slate-700 [&>*:nth-child(4n-2)]:text-blue-200">
