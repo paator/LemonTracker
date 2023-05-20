@@ -6,7 +6,7 @@ type NavAnchorProps = {
   children: React.ReactNode;
 };
 
-const NavAnchor = ({ href, onClick, children }: NavAnchorProps) => {
+function NavAnchor({ href, onClick, children }: NavAnchorProps) {
   return (
     <a
       href={href}
@@ -16,6 +16,6 @@ const NavAnchor = ({ href, onClick, children }: NavAnchorProps) => {
       {children}
     </a>
   );
-};
+}
 
 export default NavAnchor;
