@@ -27,13 +27,13 @@ function ModuleEditor({ currentModule }) {
   }
 
   return (
-    <div className="px-4 bg-slate-600 self-center w-full rounded-xl shadow-slate-900 drop-shadow-md max-w-[1080px]">
-      <div className="flex py-6 gap-4 text-slate-900 font-mono text-sm">
+    <div className="w-full self-center rounded-xl bg-slate-600 px-4 shadow-slate-900 drop-shadow-md max-w-[1080px]">
+      <div className="flex gap-4 py-6 font-mono text-sm text-slate-900">
         <div className="grow">
           <span className="text-slate-400">Title:</span>
           <input
             type="text"
-            className="px-2 mt-2 block w-full bg-white rounded-md text-sm shadow-sm"
+            className="mt-2 block w-full rounded-md bg-white px-2 text-sm shadow-sm"
             value={module.title}
             onChange={changeModuleProp("title")}
           />
@@ -42,18 +42,18 @@ function ModuleEditor({ currentModule }) {
           <span className="text-slate-400">Author:</span>
           <input
             type="text"
-            className="px-2 mt-2 block w-full bg-white rounded-md text-sm shadow-sm"
+            className="mt-2 block w-full rounded-md bg-white px-2 text-sm shadow-sm"
             value={module.author}
             onChange={changeModuleProp("author")}
           />
         </div>
       </div>
-      <div className="flex overflow-auto text-center text-xl shadow-slate-900 font-mono gap-[2px]">
+      <div className="flex overflow-auto text-center font-mono text-xl shadow-slate-900 gap-[2px]">
         {module.patterns.map((p, i) =>
           currentPatternIndex === i ? (
             <div
               key={i}
-              className="flex-shrink-0 w-8 rounded-sm bg-blue-600 cursor-default text-slate-200 border border-blue-400"
+              className="w-8 flex-shrink-0 cursor-default rounded-sm border border-blue-400 bg-blue-600 text-slate-200"
             >
               {p.number}
             </div>
@@ -61,7 +61,7 @@ function ModuleEditor({ currentModule }) {
             <div
               key={i}
               onClick={() => changePattern(i)}
-              className="flex-shrink-0 w-8 hover:bg-slate-400 rounded-sm cursor-pointer bg-slate-500 text-slate-900 border border-slate-400"
+              className="w-8 flex-shrink-0 cursor-pointer rounded-sm border border-slate-400 bg-slate-500 text-slate-900 hover:bg-slate-400"
             >
               {p.number}
             </div>
@@ -69,21 +69,23 @@ function ModuleEditor({ currentModule }) {
         )}
       </div>
       <div
-        className="[&>*]:px-3 divide-x-2 divide-slate-800 grid grid-cols-[0.1fr,0.1fr,0.1fr,2fr,2fr,2fr] w-fit mx-auto
-          px-4 py-2 my-4 bg-slate-700 drop-shadow-md rounded-lg font-mono text-slate-400 text-lg text-center"
+        className="divide-x-2 divide-slate-900 max-w-fit
+          [&>div>div:first-child]:py-2
+          mx-auto flex my-4 bg-slate-800 drop-shadow-md rounded-xl font-mono text-slate-400 text-lg text-center"
       >
-        <div>
-          <div className="text-sm text-yellow-200">.</div>
+        <div className="[&>*:nth-child(4n+2)]:bg-slate-700 [&>*:nth-child(4n-2)]:text-blue-200">
+          <div className="text-sm text-yellow-200 ">.</div>
           {currentPattern.patternRows.map((row, i) => (
-            <div className="text-blue-300" key={i}>
+            <div className="text-blue-300 px-2" key={i}>
               {i.toString(16).padStart(2, "0").toUpperCase()}
             </div>
           ))}
         </div>
-        <div>
+        <div className="[&>*:nth-child(4n+2)]:bg-slate-700">
           <div className="text-sm text-yellow-200">Envelope</div>
           {currentPattern.patternRows.map((row, i) => (
             <CellGroup
+              className="px-4"
               key={i}
               maxLength={4}
               radix={16}
@@ -92,10 +94,11 @@ function ModuleEditor({ currentModule }) {
             />
           ))}
         </div>
-        <div>
+        <div className="[&>*:nth-child(4n+2)]:bg-slate-700">
           <div className="text-sm text-yellow-200">Noise</div>
           {currentPattern.patternRows.map((row, i) => (
             <CellGroup
+              className="px-4"
               key={i}
               maxLength={2}
               radix={16}

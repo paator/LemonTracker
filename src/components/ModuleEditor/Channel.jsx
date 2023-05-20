@@ -5,12 +5,12 @@ function Channel({ channelName, channelRows, index }) {
   const letter = letters[index % 3];
 
   return (
-    <div>
+    <div className="[&>*:nth-child(4n-2)]:bg-slate-700">
       <div className="text-sm text-yellow-200">
         {channelName + " " + letter}
       </div>
       {channelRows.map((row, i) => (
-        <div key={i} className="flex gap-4">
+        <div key={i} className="flex justify-evenly gap-4 px-2">
           <div className="text-blue-100">
             <Cell
               str={row.noteData.toString()}
