@@ -1,4 +1,4 @@
-import NavAnchor from "./components/NavAnchor/NavAnchor";
+import NavAnchor from "./components/NavAnchor/NavAnchor.js";
 import EditorPage from "./pages/EditorPage";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import lemonLogo from "./assets/lemon.svg";
