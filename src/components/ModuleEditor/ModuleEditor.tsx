@@ -95,6 +95,7 @@ function ModuleEditor({ currentModule }: ModuleEditorProps) {
               radix={16}
               value={row.envelopeValue}
               defaultCellStr="."
+              allowZero={true}
             />
           ))}
         </div>
@@ -108,6 +109,7 @@ function ModuleEditor({ currentModule }: ModuleEditorProps) {
               radix={16}
               value={row.noiseValue}
               defaultCellStr="."
+              allowZero={true}
             />
           ))}
         </div>
