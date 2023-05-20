@@ -1,12 +1,18 @@
 type CellProps = {
   str: string;
   defaultDisplayValue: string;
+  allowZero?: boolean;
 };
 
-function Cell({ str, defaultDisplayValue }: CellProps) {
+function Cell({ str, defaultDisplayValue, allowZero}: CellProps) {
+
+  function ValueOrDefault() {
+    return (str === "0" && !allowZero) || str === defaultDisplayValue
+  }
+
   return (
-    <span className={str === defaultDisplayValue || str === "0" ? "text-slate-500" : ""}>
-      {str === "0" ? defaultDisplayValue : str}
+    <span className={ValueOrDefault() ? "text-slate-500" : ""}>
+      {ValueOrDefault() ? defaultDisplayValue : str}
     </span>
   );
 }

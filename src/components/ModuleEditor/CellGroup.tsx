@@ -7,6 +7,7 @@ type CellGroupProps = {
   value: number;
   defaultCellStr: string;
   className: string;
+  allowZero?: boolean;
 };
 
 function CellGroup({
@@ -15,6 +16,7 @@ function CellGroup({
   value,
   defaultCellStr,
   className,
+  allowZero,
 }: CellGroupProps) {
   const [valueWithDefaultPrefix, setValueWithDefaultPrefix] = useState(
     createValueWithDefaultPrefix
@@ -32,7 +34,7 @@ function CellGroup({
   return (
     <div className={className}>
       {valueWithDefaultPrefix.split("").map((char, i) => (
-        <Cell defaultDisplayValue={defaultCellStr} key={i} str={char} />
+        <Cell defaultDisplayValue={defaultCellStr} key={i} str={char} allowZero={allowZero} />
       ))}
     </div>
   );
