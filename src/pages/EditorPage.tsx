@@ -1,12 +1,12 @@
 import EditorButton from "../components/EditorMenu/EditorButton";
 import EditorMenu from "../components/EditorMenu/EditorMenu";
-import {useRef, useState} from "react";
-import Module from "../models/module.js";
+import { useRef, useState, ChangeEvent } from "react";
+import Module from "../models/module";
 import VortexModuleConverter from "../services/vt-converter";
-import ModuleEditor from "../components/ModuleEditor/ModuleEditor.jsx";
+import ModuleEditor from "../components/ModuleEditor/ModuleEditor";
 
 function EditorPage() {
-  const fileLoaderInput = useRef(null);
+  const fileLoaderInput = useRef<HTMLInputElement>(null);
   const [currentModule, updateCurrentModule] = useState(new Module());
 
   function newModule() {
@@ -14,14 +14,20 @@ function EditorPage() {
   }
 
   function loadModule() {
-    fileLoaderInput.current.click();
+    if (fileLoaderInput.current) {
+      fileLoaderInput.current.click();
+    }
   }
 
-  async function handleFileSelect(event) {
+  async function handleFileSelect(event: ChangeEvent<HTMLInputElement>) {
+    if (!event.target.files) return;
+
     const file = event.target.files[0];
     const converter = new VortexModuleConverter();
 
-    const lemonModule = await converter.convertToLemonModule(new Blob([file], {type: file.type}));
+    const lemonModule = await converter.convertToLemonModule(
+      new Blob([file], { type: file.type })
+    );
 
     updateCurrentModule(lemonModule);
   }
@@ -33,7 +39,7 @@ function EditorPage() {
           <EditorButton onClick={newModule}>New Track</EditorButton>
           <EditorButton onClick={loadModule}>Load Module</EditorButton>
         </EditorMenu>
-        <ModuleEditor currentModule={currentModule}/>
+        <ModuleEditor currentModule={currentModule} />
       </div>
       <input
         ref={fileLoaderInput}

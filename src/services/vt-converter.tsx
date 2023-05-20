@@ -1,11 +1,25 @@
-import Module from "../models/module";
-import Pattern from "../models/pattern";
-import toModuleNote from "../models/mappings";
-import PatternRow from "../models/pattern-row";
-import ChannelRow from "../models/channel-row";
+import Module from "../models/module.js";
+import Pattern from "../models/pattern.js";
+import toModuleNote from "../models/mappings.js";
+import PatternRow from "../models/pattern-row.js";
+import ChannelRow from "../models/channel-row.js";
+
+type VortexMetaData = {
+  VortexTrackerII: string;
+  Version: string;
+  Title: string;
+  Author: string;
+  ShowInfo: string;
+  NoteTable: string;
+  ChipFreq: string;
+  IntFreq: string;
+  Speed: string;
+  Noise: string;
+  PlayOrder: string;
+};
 
 export default class VortexModuleConverter {
-  convertToLemonModule(moduleFile) {
+  convertToLemonModule(moduleFile: Blob): Promise<Module> {
     return new Promise((resolve, reject) => {
       const module = new Module("", "", 3, []);
       const fileReader = new FileReader();
@@ -15,7 +29,8 @@ export default class VortexModuleConverter {
       };
 
       fileReader.onload = (_progressEvent) => {
-        const text = fileReader.result;
+        const text = fileReader.result as string;
+
         const lines = text.split("\r\n");
 
         const generator = this.createGenerator(lines);
@@ -34,7 +49,7 @@ export default class VortexModuleConverter {
     });
   }
 
-  createGenerator(lines) {
+  createGenerator(lines: string[]): Generator<string, void, string> {
     return (function* generator(fileLines) {
       for (const line of fileLines) {
         yield line;
@@ -42,9 +57,10 @@ export default class VortexModuleConverter {
     })(lines);
   }
 
-  parseMetadata(generator) {
-    let line;
-    let metadata = {
+  parseMetadata(generator: Generator<string, void, string>) {
+    let line: IteratorResult<string, void>;
+
+    let metadata: VortexMetaData = {
       VortexTrackerII: "1",
       Version: "3.7",
       Title: "",
@@ -70,14 +86,14 @@ export default class VortexModuleConverter {
       );
     }
 
-    const builder = [];
+    const builder: string[] = [];
     while (!(line = generator.next()).done) {
       if (line.value.startsWith("[")) {
         break;
       }
 
       let isReadingValue = false;
-      let key = null;
+      let key: string | null = null;
 
       for (const c of line.value) {
         if (!isReadingValue && c === "=") {
@@ -90,7 +106,7 @@ export default class VortexModuleConverter {
       }
 
       if (key != null) {
-        metadata[key] = builder.join("");
+        metadata[key as keyof typeof metadata] = builder.join("");
         builder.length = 0;
       }
     }
@@ -98,15 +114,15 @@ export default class VortexModuleConverter {
     return metadata;
   }
 
-  setMetadataValues(metadata, module) {
+  setMetadataValues(metadata: VortexMetaData, module: Module) {
     module.title = metadata["Title"];
     module.author = metadata["Author"];
     module.initSpeed = parseInt(metadata["Speed"]);
   }
 
-  extractPatterns(generator) {
-    const patterns = [];
-    let line;
+  extractPatterns(generator: Generator<string, void, string>) {
+    const patterns: Pattern[] = [];
+    let line: IteratorResult<string, void>;
     let i = 0;
 
     while (!(line = generator.next()).done) {
@@ -114,7 +130,11 @@ export default class VortexModuleConverter {
       if (!line.value.startsWith("[Pattern")) continue;
 
       const match = line.value.match(/\d+/);
-      const patternNumber = parseInt(match[0], 10);
+      let patternNumber = 0;
+
+      if (match) {
+        patternNumber = parseInt(match[0], 10);
+      }
 
       const pattern = new Pattern(patternNumber);
       patterns.push(pattern);
@@ -152,7 +172,7 @@ export default class VortexModuleConverter {
     return patterns;
   }
 
-  createPatternRow(rowValues) {
+  createPatternRow(rowValues: string[]) {
     const patternRow = new PatternRow();
 
     let envelopeValue = parseInt(rowValues[0].replace(/\./g, ""), 16);
@@ -166,28 +186,28 @@ export default class VortexModuleConverter {
     return patternRow;
   }
 
-  mapRowData(trimmedRowData) {
+  mapRowData(trimmedRowData: string) {
     const row = new ChannelRow();
     row.noteData = toModuleNote(trimmedRowData.slice(0, 3));
-    row.instrument = trimmedRowData[3];
-    row.envelope = trimmedRowData[4];
-    row.ornament = trimmedRowData[5];
-    row.volume = trimmedRowData[6];
-    row.effect = trimmedRowData[8];
-    row.effectParamX = trimmedRowData[9];
-    row.effectParamY = trimmedRowData[10];
-    row.effectParamZ = trimmedRowData[11];
+    row.instrument = parseInt(trimmedRowData[3], 16) || 0;
+    row.envelope = parseInt(trimmedRowData[4], 16) || 0;
+    row.ornament = parseInt(trimmedRowData[5], 16) || 0;
+    row.volume = parseInt(trimmedRowData[6], 16) || 0;
+    row.effect = parseInt(trimmedRowData[8], 16) || 0;
+    row.effectParamX = parseInt(trimmedRowData[9], 16) || 0;
+    row.effectParamY = parseInt(trimmedRowData[10], 16) || 0;
+    row.effectParamZ = parseInt(trimmedRowData[11], 16) || 0;
     return row;
   }
 
-  getPatternNumbersOrder(patternOrder) {
+  getPatternNumbersOrder(patternOrder: string[]) {
     return patternOrder.map((x) => {
       x = x.replace(/^L+/, "");
       return parseInt(x);
     });
   }
 
-  addPatternsToModule(patterns, patternNumbersOrder, module) {
+  addPatternsToModule(patterns: Pattern[], patternNumbersOrder: number[], module: Module) {
     for (const patternNumber of patternNumbersOrder) {
       const pattern = patterns.find((x) => x.number === patternNumber);
       if (pattern) {

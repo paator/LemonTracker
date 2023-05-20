@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonJS",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "typeRoots": ["./src/@types", "./node_modules/@types"],
+    "skipLibCheck": true,
+    "jsx": "react-jsx"
+  }
+}

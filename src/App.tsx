@@ -26,7 +26,7 @@ function App() {
         </nav>
         <div className="p-4 text-slate-200">
           <Routes>
-            <Route exact path="/" element={<EditorPage />} />
+            <Route path="/" element={<EditorPage />} />
             <Route path="*" element={<p>Page not found.</p>} />
           </Routes>
         </div>
