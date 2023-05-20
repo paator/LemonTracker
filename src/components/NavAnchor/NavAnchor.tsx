@@ -1,12 +1,12 @@
 import React from "react";
 
 type NavAnchorProps = {
-  href: string,
-  onClick: React.MouseEventHandler<HTMLAnchorElement>,
-  children: React.ReactNode
-}
+  href: string;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
+  children: React.ReactNode;
+};
 
-function NavAnchor({ href, onClick, children } : NavAnchorProps) {
+const NavAnchor = ({ href, onClick, children }: NavAnchorProps) => {
   return (
     <a
       href={href}
@@ -16,6 +16,6 @@ function NavAnchor({ href, onClick, children } : NavAnchorProps) {
       {children}
     </a>
   );
-}
+};
 
 export default NavAnchor;

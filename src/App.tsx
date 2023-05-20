@@ -1,4 +1,4 @@
-import NavAnchor from "./components/NavAnchor/NavAnchor.js";
+import NavAnchor from "./components/NavAnchor/NavAnchor";
 import EditorPage from "./pages/EditorPage";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import lemonLogo from "./assets/lemon.svg";
@@ -26,7 +26,7 @@ function App() {
         </nav>
         <div className="p-4 text-slate-200">
           <Routes>
-            <Route exact path="/" element={<EditorPage />} />
+            <Route path="/" element={<EditorPage />} />
             <Route path="*" element={<p>Page not found.</p>} />
           </Routes>
         </div>

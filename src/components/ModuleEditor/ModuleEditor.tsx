@@ -1,10 +1,14 @@
-import { useEffect, useState } from "react";
-import Channel from "./Channel.jsx";
-import Cell from "./Cell.jsx";
-import CellGroup from "./CellGroup.jsx";
+import React, { useEffect, useState } from "react";
+import Module from "../../models/module";
+import CellGroup from "./CellGroup";
+import Channel from "./Channel";
 
-function ModuleEditor({ currentModule }) {
-  const [module, setModule] = useState({ ...currentModule });
+type ModuleEditorProps = {
+  currentModule: Module;
+};
+
+function ModuleEditor({ currentModule }: ModuleEditorProps) {
+  const [module, setModule] = useState<Module>({ ...currentModule });
   const [currentPattern, setCurrentPattern] = useState(
     currentModule.patterns[0]
   );
@@ -15,13 +19,13 @@ function ModuleEditor({ currentModule }) {
     changePattern(0);
   }, [currentModule]);
 
-  function changePattern(index) {
+  function changePattern(index: number) {
     setCurrentPattern(currentModule.patterns[index]);
     setCurrentPatternIndex(index);
   }
 
-  function changeModuleProp(field) {
-    return (e) => {
+  function changeModuleProp(field: string) {
+    return (e: React.ChangeEvent<HTMLInputElement>) => {
       setModule({ ...module, [field]: e.target.value });
     };
   }

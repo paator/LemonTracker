@@ -1,7 +1,7 @@
 import NoteData, { Note } from "./note-data";
 
-export default function toModuleNote(noteString) {
-  if (noteString.length < 3) return null;
+export default function toModuleNote(noteString: string) {
+  if (noteString.length < 3) return new NoteData(Note.None, 0);
 
   const noteLabel = noteString.substring(0, 2);
 

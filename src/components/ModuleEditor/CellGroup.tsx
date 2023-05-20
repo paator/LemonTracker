@@ -1,8 +1,24 @@
-import Cell from "./Cell.jsx";
+import Cell from "./Cell";
 import { useEffect, useState } from "react";
 
-function CellGroup({ maxLength, radix, value, defaultCellStr, className }) {
-  const [valueWithDefaultPrefix, setValueWithDefaultPrefix] = useState(createValueWithDefaultPrefix);
+type CellGroupProps = {
+  maxLength: number;
+  radix: number;
+  value: number;
+  defaultCellStr: string;
+  className: string;
+};
+
+function CellGroup({
+  maxLength,
+  radix,
+  value,
+  defaultCellStr,
+  className,
+}: CellGroupProps) {
+  const [valueWithDefaultPrefix, setValueWithDefaultPrefix] = useState(
+    createValueWithDefaultPrefix
+  );
 
   function createValueWithDefaultPrefix() {
     const num = value === 0 ? "" : value.toString(radix).toUpperCase();
