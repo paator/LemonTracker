@@ -19,7 +19,7 @@ export enum Note {
   C = "C-",
   Csharp = "C#",
   D = "D-",
-  Dsharp ="D#",
+  Dsharp = "D#",
   E = "E-",
   F = "F-",
   Fsharp = "F#",
@@ -29,4 +29,4 @@ export enum Note {
   Asharp = "A#",
   B = "B-",
   Off = "R-",
-};
+}
