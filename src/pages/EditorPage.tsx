@@ -34,7 +34,7 @@ function EditorPage() {
 
   return (
     <>
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
         <EditorMenu>
           <EditorButton onClick={newModule}>New Track</EditorButton>
           <EditorButton onClick={loadModule}>Load Module</EditorButton>
