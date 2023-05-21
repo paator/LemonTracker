@@ -13,7 +13,7 @@ type EditorRowProps = {
 
 function EditorRow({ row, index, channels, bgEndOfBar }: EditorRowProps) {
   function applyStyleWhenEndOfBar(normalStyle?: string, endStyle?: string) {
-    if (index % 4 == 0) {
+    if (index % 4 === 0) {
       return endStyle + " " + bgEndOfBar;
     } else {
       return normalStyle;
@@ -21,9 +21,11 @@ function EditorRow({ row, index, channels, bgEndOfBar }: EditorRowProps) {
   }
 
   return (
-    <div className="flex">
+    <div className="flex relative" style={{ top: `${0}px` }}>
       <Cell
-        className={applyStyleWhenEndOfBar("text-blue-300", "text-blue-200") + " px-2"}
+        className={
+          applyStyleWhenEndOfBar("text-blue-300", "text-blue-200") + " px-2"
+        }
         str={index.toString(16).padStart(2, "0").toUpperCase()}
       />
       <span className="border border-slate-900" />
@@ -45,11 +47,20 @@ function EditorRow({ row, index, channels, bgEndOfBar }: EditorRowProps) {
         allowZero={true}
       />
       <span className="border border-slate-900" />
-      <ChannelRow className={applyStyleWhenEndOfBar()} row={channels[0].channelRows[index]} />
+      <ChannelRow
+        className={applyStyleWhenEndOfBar()}
+        row={channels[0].channelRows[index]}
+      />
       <span className="border border-slate-900" />
-      <ChannelRow className={applyStyleWhenEndOfBar()} row={channels[1].channelRows[index]} />
+      <ChannelRow
+        className={applyStyleWhenEndOfBar()}
+        row={channels[1].channelRows[index]}
+      />
       <span className="border border-slate-900" />
-      <ChannelRow className={applyStyleWhenEndOfBar()} row={channels[2].channelRows[index]} />
+      <ChannelRow
+        className={applyStyleWhenEndOfBar()}
+        row={channels[2].channelRows[index]}
+      />
     </div>
   );
 }

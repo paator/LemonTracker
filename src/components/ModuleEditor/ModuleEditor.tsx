@@ -15,7 +15,8 @@ function ModuleEditor({ currentModule }: ModuleEditorProps) {
 
   useEffect(() => {
     setModule({ ...currentModule });
-    changePattern(0);
+    setCurrentPattern(currentModule.patterns[0]);
+    setCurrentPatternIndex(0);
   }, [currentModule]);
 
   function changePattern(index: number) {
@@ -56,7 +57,7 @@ function ModuleEditor({ currentModule }: ModuleEditorProps) {
           currentPatternIndex === i ? (
             <div
               key={i}
-              className="w-8 cursor-default rounded-sm border border-blue-400 bg-blue-600 text-slate-200"
+              className="w-8 flex-shrink-0 cursor-default rounded-sm border border-blue-400 bg-blue-600 text-slate-200"
             >
               {p.number}
             </div>
