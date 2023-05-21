@@ -6,7 +6,7 @@ type CellGroupProps = {
   radix: number;
   value: number;
   defaultCellStr: string;
-  className: string;
+  className?: string;
   allowZero?: boolean;
 };
 
@@ -34,7 +34,12 @@ function CellGroup({
   return (
     <div className={className}>
       {valueWithDefaultPrefix.split("").map((char, i) => (
-        <Cell defaultDisplayValue={defaultCellStr} key={i} str={char} allowZero={allowZero} />
+        <Cell
+          defaultDisplayValue={defaultCellStr}
+          key={i}
+          str={char}
+          allowZero={allowZero}
+        />
       ))}
     </div>
   );
