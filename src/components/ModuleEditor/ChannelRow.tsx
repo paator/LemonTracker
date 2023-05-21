@@ -9,10 +9,10 @@ type ChannelRowProps = {
 function ChannelRow({ row, className }: ChannelRowProps) {
   return (
     <div className={className + " flex gap-3 px-2"}>
-      <span>
+      <span className="text-blue-100">
         <Cell str={row.noteData.toString()} defaultDisplayValue="---" />
       </span>
-      <span>
+      <span className="text-blue-300">
         <Cell
           str={row.instrument.toString(16).toUpperCase()}
           defaultDisplayValue="."
@@ -30,7 +30,7 @@ function ChannelRow({ row, className }: ChannelRowProps) {
           defaultDisplayValue="."
         />
       </span>
-      <span>
+      <span className="text-yellow-200">
         <Cell
           str={row.effect.toString(16).toUpperCase()}
           defaultDisplayValue="."

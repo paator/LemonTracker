@@ -7,7 +7,7 @@ function App() {
   return (
     <Router basename={window.location.pathname.replace(/(\/[^/]*)$/, "")}>
       <main>
-        <nav className="flex bg-gray-800 p-3 gap-10 items-center">
+        <nav className="flex bg-gray-800 p-3 gap-6 items-center">
           <div className="flex gap-2 items-center">
             <img
               src={lemonLogo}
@@ -19,7 +19,7 @@ function App() {
               LemonTracker
             </span>
           </div>
-          <div className="flex gap-4 text-slate-300 font-mono">
+          <div className="flex gap-4 text-slate-300 font-mono text-sm">
             <NavAnchor href="/">Module Editor</NavAnchor>
             <NavAnchor href="/#">Explorer</NavAnchor>
           </div>
