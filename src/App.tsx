@@ -6,7 +6,7 @@ import lemonLogo from "./assets/lemon.svg";
 function App() {
   return (
     <Router basename={window.location.pathname.replace(/(\/[^/]*)$/, "")}>
-      <main>
+      <main className="h-full flex flex-col">
         <nav className="flex bg-gray-800 p-3 gap-6 items-center">
           <div className="flex gap-2 items-center">
             <img
@@ -24,7 +24,7 @@ function App() {
             <NavAnchor href="/#">Explorer</NavAnchor>
           </div>
         </nav>
-        <div className="p-4 text-slate-200">
+        <div className="p-4 text-slate-200 min-h-0 flex flex-col">
           <Routes>
             <Route path="/" element={<EditorPage />} />
             <Route path="*" element={<p>Page not found.</p>} />
