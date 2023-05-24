@@ -49,11 +49,31 @@ function PatternEditor({ currentPattern }: PatternEditorProps) {
       }
     };
 
+    const handleWheel = (e: WheelEvent) => {
+      if (e.deltaY < 0) {
+        setCurrentYPosition((prev) => {
+          if (prev === 0) {
+            return prev;
+          }
+          return prev - 1;
+        });
+      } else {
+        setCurrentYPosition((prev) => {
+          if (prev === currentPattern.patternRows.length - 1) {
+            return prev;
+          }
+          return prev + 1;
+        });
+      }
+    };
+
     setCurrentYPosition(0);
 
     document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("wheel", handleWheel);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("wheel", handleWheel);
     };
   }, [currentPattern]);
 
