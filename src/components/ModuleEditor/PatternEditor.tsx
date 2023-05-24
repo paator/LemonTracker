@@ -12,10 +12,6 @@ function PatternEditor({ currentPattern }: PatternEditorProps) {
   const [currentXPosition, setCurrentXPosition] = useState(0);
 
   useEffect(() => {
-    setCurrentYPosition(0);
-  }, [currentPattern]);
-
-  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (e.key) {
         case "ArrowUp":
@@ -53,16 +49,18 @@ function PatternEditor({ currentPattern }: PatternEditorProps) {
       }
     };
 
+    setCurrentYPosition(0);
+
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [currentPattern]);
 
   return (
     <div
       ref={ref}
-      className="overflow-y-hidden max-w-fit select-none mx-auto my-4 bg-slate-800 drop-shadow-md font-mono text-slate-400 text-lg text-center"
+      className="overflow-y-hidden h-screen select-none mx-auto my-4 bg-slate-800 drop-shadow-md font-mono text-slate-400 text-lg text-center"
     >
       {currentPattern.patternRows.map((row, i) => (
         <EditorRow
