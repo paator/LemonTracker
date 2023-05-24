@@ -8,6 +8,8 @@ type CellGroupProps = {
   defaultCellStr: string;
   className?: string;
   allowZero?: boolean;
+  isSelected?: boolean;
+  selectedXIndex?: number;
 };
 
 function CellGroup({
@@ -17,6 +19,8 @@ function CellGroup({
   defaultCellStr,
   className,
   allowZero,
+  isSelected,
+  selectedXIndex = 0,
 }: CellGroupProps) {
   const [valueWithDefaultPrefix, setValueWithDefaultPrefix] = useState(
     createValueWithDefaultPrefix
@@ -39,6 +43,7 @@ function CellGroup({
           key={i}
           str={char}
           allowZero={allowZero}
+          isSelected={selectedXIndex === i && isSelected}
         />
       ))}
     </div>

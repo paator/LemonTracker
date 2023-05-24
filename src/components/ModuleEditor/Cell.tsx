@@ -1,21 +1,27 @@
+import classNames from "classnames";
+
 type CellProps = {
   str: string;
   defaultDisplayValue?: string;
   allowZero?: boolean;
   className?: string;
+  isSelected?: boolean;
 };
 
-function Cell({ str, defaultDisplayValue, allowZero, className }: CellProps) {
-  function ValueOrDefault() {
-    return (
-      (defaultDisplayValue && str === "0" && !allowZero) ||
-      str === defaultDisplayValue
-    );
-  }
+function Cell({ str, defaultDisplayValue, allowZero, className, isSelected }: CellProps) {
+  const isValueOrDefault = (defaultDisplayValue && str === "0" && !allowZero) || str === defaultDisplayValue;
+
+  const cellClasses = classNames(
+    { "text-slate-500": isValueOrDefault },
+    { "bg-blue-100 text-black": isSelected },
+    className
+  );
+
+  const displayValue = isValueOrDefault ? defaultDisplayValue : str;
 
   return (
-    <span className={(ValueOrDefault() ? "text-slate-500 " : "") + className}>
-      {ValueOrDefault() ? defaultDisplayValue : str}
+    <span className={cellClasses}>
+      {displayValue}
     </span>
   );
 }

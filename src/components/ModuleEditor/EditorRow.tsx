@@ -9,56 +9,75 @@ type EditorRowProps = {
   index: number;
   channels: Channel[];
   bgEndOfBar?: string;
+  currentYPosition: number;
+  currentXPosition: number;
 };
 
-function EditorRow({ row, index, channels, bgEndOfBar }: EditorRowProps) {
-  function applyStyleWhenEndOfBar(normalStyle?: string, endStyle?: string) {
+function EditorRow({
+  row,
+  index,
+  channels,
+  bgEndOfBar,
+  currentYPosition,
+  currentXPosition,
+}: EditorRowProps) {
+  function applyStyle(
+    selectedStyle?: string,
+    normalStyle?: string,
+    endStyle?: string
+  ) {
+    if (currentYPosition === index) {
+      return selectedStyle;
+    }
     if (index % 4 === 0) {
       return endStyle + " " + bgEndOfBar;
-    } else {
-      return normalStyle;
     }
+    return normalStyle;
   }
 
   return (
-    <div className="flex relative" style={{ top: `${0}px` }}>
+    <div className="flex relative" style={{ top: `calc(${currentYPosition * -28}px + 50%)`}}>
       <Cell
         className={
-          applyStyleWhenEndOfBar("text-blue-300", "text-blue-200") + " px-2"
+          applyStyle("bg-blue-800", "text-blue-300", "text-blue-200") + " px-2"
         }
         str={index.toString(16).padStart(2, "0").toUpperCase()}
       />
       <span className="border border-slate-900" />
       <CellGroup
-        className={applyStyleWhenEndOfBar() + " px-2"}
+        className={applyStyle("bg-blue-800") + " px-2"}
         maxLength={4}
         radix={16}
         value={row.envelopeValue}
         defaultCellStr="."
         allowZero={true}
+        isSelected={currentYPosition === index}
+        selectedXIndex={currentXPosition}
       />
       <span className="border border-slate-900" />
       <CellGroup
-        className={applyStyleWhenEndOfBar() + " px-2"}
+        className={applyStyle("bg-blue-800") + " px-2"}
         maxLength={2}
         radix={16}
         value={row.noiseValue}
         defaultCellStr="."
         allowZero={true}
+        isSelected={currentYPosition === index}
+        selectedXIndex={currentXPosition}
       />
       <span className="border border-slate-900" />
       <ChannelRow
-        className={applyStyleWhenEndOfBar()}
+        className={applyStyle("bg-blue-800")}
         row={channels[0].channelRows[index]}
       />
       <span className="border border-slate-900" />
       <ChannelRow
-        className={applyStyleWhenEndOfBar()}
+        className={applyStyle("bg-blue-800")}
         row={channels[1].channelRows[index]}
       />
       <span className="border border-slate-900" />
       <ChannelRow
-        className={applyStyleWhenEndOfBar()}
+        className={applyStyle("bg-blue-800")}
         row={channels[2].channelRows[index]}
       />
     </div>
