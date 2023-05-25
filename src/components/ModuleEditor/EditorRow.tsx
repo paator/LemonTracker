@@ -11,7 +11,9 @@ type EditorRowProps = {
   channels: Channel[];
   bgEndOfBar?: string;
   currentYPosition: number;
-  currentXPosition: number;
+  currentXPosition?: number;
+  isInCurrentPattern: boolean;
+  amountOfLoadedPatterns: number;
 };
 
 function EditorRow({
@@ -21,26 +23,43 @@ function EditorRow({
   bgEndOfBar,
   currentYPosition,
   currentXPosition,
+  amountOfLoadedPatterns,
+  isInCurrentPattern = false,
 }: EditorRowProps) {
   function applyStyle(
     selectedStyle?: string,
     normalStyle?: string,
     endStyle?: string
   ) {
-    if (currentYPosition === index) {
+    if (currentYPosition === index && isInCurrentPattern) {
       return selectedStyle;
     }
-    if (index % 4 === 0) {
+    if (index % 4 === 0 && isInCurrentPattern) {
       return endStyle + " " + bgEndOfBar;
     }
+
+    if(index % 4 === 0 && !isInCurrentPattern) {
+      return "opacity-30 " + bgEndOfBar;
+    }
+
+    if(!isInCurrentPattern) {
+      return "opacity-30"
+    }
+
     return normalStyle;
+  }
+
+  function styleRowPosition() {
+    const percentage = 50 / amountOfLoadedPatterns;
+
+    return `calc(${currentYPosition * -height}px + ${percentage}%)`;
   }
 
   const ref = useRef<HTMLDivElement>(null);
   const height = ref.current ? ref.current.offsetHeight : 0;
 
   return (
-    <div ref={ref} className="flex relative" style={{ top: `calc(${currentYPosition * -height}px + 50%)`}}>
+    <div ref={ref} className="flex relative" style={{ top: styleRowPosition()} }>
       <Cell
         className={
           applyStyle("bg-blue-800", "text-blue-300", "text-blue-200") + " px-2"
@@ -55,7 +74,7 @@ function EditorRow({
         value={row.envelopeValue}
         defaultCellStr="."
         allowZero={true}
-        isSelected={currentYPosition === index}
+        isSelected={currentYPosition === index && isInCurrentPattern}
         selectedXIndex={currentXPosition}
       />
       <span className="border border-slate-900" />
@@ -66,7 +85,7 @@ function EditorRow({
         value={row.noiseValue}
         defaultCellStr="."
         allowZero={true}
-        isSelected={currentYPosition === index}
+        isSelected={currentYPosition === index && isInCurrentPattern}
         selectedXIndex={currentXPosition}
       />
       <span className="border border-slate-900" />

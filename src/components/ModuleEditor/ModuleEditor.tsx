@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Module from "../../models/module";
 import PatternEditor from "./PatternEditor";
+import Pattern from "../../models/pattern";
 
 type ModuleEditorProps = {
   currentModule: Module;
@@ -11,17 +12,37 @@ function ModuleEditor({ currentModule }: ModuleEditorProps) {
   const [currentPattern, setCurrentPattern] = useState(
     currentModule.patterns[0]
   );
+  const [previousPattern, setPreviousPattern] = useState<Pattern | null>(null);
+  const [nextPattern, setNextPattern] = useState<Pattern | null>(null);
   const [currentPatternIndex, setCurrentPatternIndex] = useState(0);
 
   useEffect(() => {
     setModule({ ...currentModule });
     setCurrentPattern(currentModule.patterns[0]);
     setCurrentPatternIndex(0);
+    setPreviousPattern(null);
+
+    if (currentModule.patterns.length >= 2) {
+      setNextPattern(currentModule.patterns[1]);
+      return;
+    }
   }, [currentModule]);
 
   function changePattern(index: number) {
     setCurrentPattern(currentModule.patterns[index]);
     setCurrentPatternIndex(index);
+
+    if (index > 0) {
+      setPreviousPattern(currentModule.patterns[index - 1]);
+    } else {
+      setPreviousPattern(null);
+    }
+
+    if (index < currentModule.patterns.length - 1) {
+      setNextPattern(currentModule.patterns[index + 1]);
+    } else {
+      setNextPattern(null);
+    }
   }
 
   function changeModuleProp(field: string) {
@@ -72,7 +93,11 @@ function ModuleEditor({ currentModule }: ModuleEditorProps) {
           )
         )}
       </div>
-      <PatternEditor currentPattern={currentPattern} />
+      <PatternEditor
+        nextPattern={nextPattern}
+        previousPattern={previousPattern}
+        currentPattern={currentPattern}
+      />
     </div>
   );
 }
