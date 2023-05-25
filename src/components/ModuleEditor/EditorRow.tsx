@@ -3,6 +3,7 @@ import CellGroup from "./CellGroup";
 import ChannelRow from "./ChannelRow";
 import PatternRow from "../../models/pattern-row";
 import Channel from "../../models/channel";
+import {useRef} from "react";
 
 type EditorRowProps = {
   row: PatternRow;
@@ -35,8 +36,11 @@ function EditorRow({
     return normalStyle;
   }
 
+  const ref = useRef<HTMLDivElement>(null);
+  const height = ref.current ? ref.current.offsetHeight : 0;
+
   return (
-    <div className="flex relative" style={{ top: `calc(${currentYPosition * -28}px + 50%)`}}>
+    <div ref={ref} className="flex relative" style={{ top: `calc(${currentYPosition * -height}px + 50%)`}}>
       <Cell
         className={
           applyStyle("bg-blue-800", "text-blue-300", "text-blue-200") + " px-2"
