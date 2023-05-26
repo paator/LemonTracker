@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Module from "../../models/module";
 import PatternEditor from "./PatternEditor";
 
@@ -13,16 +13,18 @@ function ModuleEditor({ currentModule }: ModuleEditorProps) {
   );
   const [currentPatternIndex, setCurrentPatternIndex] = useState(0);
 
+  const changePattern = useCallback(
+    (index: number) => {
+      setCurrentPattern(currentModule.patterns[index]);
+      setCurrentPatternIndex(index);
+    },
+    [currentModule]
+  );
+
   useEffect(() => {
     setModule({ ...currentModule });
-    setCurrentPattern(currentModule.patterns[0]);
-    setCurrentPatternIndex(0);
-  }, [currentModule]);
-
-  function changePattern(index: number) {
-    setCurrentPattern(currentModule.patterns[index]);
-    setCurrentPatternIndex(index);
-  }
+    changePattern(0);
+  }, [currentModule, changePattern]);
 
   function changeModuleProp(field: string) {
     return (e: React.ChangeEvent<HTMLInputElement>) => {
