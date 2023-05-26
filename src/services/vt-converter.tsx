@@ -189,7 +189,7 @@ export default class VortexModuleConverter {
   mapRowData(trimmedRowData: string) {
     const row = new ChannelRow();
     row.noteData = toModuleNote(trimmedRowData.slice(0, 3));
-    row.instrument = parseInt(trimmedRowData[3], 16) || 0;
+    row.instrument = parseInt(trimmedRowData[3], 32) || 0;
     row.envelope = parseInt(trimmedRowData[4], 16) || 0;
     row.ornament = parseInt(trimmedRowData[5], 16) || 0;
     row.volume = parseInt(trimmedRowData[6], 16) || 0;
