@@ -1,5 +1,5 @@
 import Cell from "./Cell";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type CellGroupProps = {
   maxLength: number;
@@ -22,18 +22,18 @@ function CellGroup({
   isSelected,
   selectedXIndex = 0,
 }: CellGroupProps) {
+  const createValueWithDefaultPrefix = useCallback(() => {
+    const num = value === 0 ? "" : value.toString(radix).toUpperCase();
+    return num.padStart(maxLength, defaultCellStr);
+  }, [value, radix, maxLength, defaultCellStr]);
+
   const [valueWithDefaultPrefix, setValueWithDefaultPrefix] = useState(
     createValueWithDefaultPrefix
   );
 
-  function createValueWithDefaultPrefix() {
-    const num = value === 0 ? "" : value.toString(radix).toUpperCase();
-    return num.padStart(maxLength, defaultCellStr);
-  }
-
   useEffect(() => {
     setValueWithDefaultPrefix(createValueWithDefaultPrefix());
-  }, [value]);
+  }, [value, createValueWithDefaultPrefix]);
 
   return (
     <div className={className}>
