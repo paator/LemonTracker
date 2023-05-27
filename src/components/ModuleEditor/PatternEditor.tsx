@@ -16,7 +16,7 @@ function PatternEditor({ currentPattern }: PatternEditorProps) {
     if (!editor) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      e.preventDefault()
+      e.preventDefault();
 
       switch (e.key) {
         case "ArrowUp":
@@ -49,6 +49,25 @@ function PatternEditor({ currentPattern }: PatternEditorProps) {
               return prev;
             }
             return prev + 1;
+          });
+          break;
+        case "PageUp":
+          setCurrentYPosition((prev) => {
+            if (prev < 0x10) {
+              return currentPattern.patternRows.length - 1;
+            }
+            return prev - 0x10;
+          });
+          break;
+        case "PageDown":
+          setCurrentYPosition((prev) => {
+            if (prev === currentPattern.patternRows.length - 1) {
+              return 0;
+            }
+            if (prev >= currentPattern.patternRows.length - 0x10) {
+              return currentPattern.patternRows.length - 1;
+            }
+            return prev + 0x10;
           });
           break;
       }
