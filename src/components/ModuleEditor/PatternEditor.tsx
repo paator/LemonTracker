@@ -12,7 +12,8 @@ function PatternEditor({ currentPattern }: PatternEditorProps) {
   const [currentXPosition, setCurrentXPosition] = useState(0);
 
   useEffect(() => {
-    const editor = ref.current!;
+    const editor = ref.current;
+    if (!editor) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (e.key) {
