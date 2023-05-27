@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Pattern from "../../models/pattern";
 import EditorRow from "./EditorRow";
 
@@ -12,11 +12,13 @@ function PatternEditor({ currentPattern }: PatternEditorProps) {
   const [currentXPosition, setCurrentXPosition] = useState(0);
 
   useEffect(() => {
+    const editor = ref.current!;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (e.key) {
         case "ArrowUp":
           setCurrentYPosition((prev) => {
-            if(prev === 0) {
+            if (prev === 0) {
               return prev;
             }
             return prev - 1;
@@ -24,26 +26,26 @@ function PatternEditor({ currentPattern }: PatternEditorProps) {
           break;
         case "ArrowDown":
           setCurrentYPosition((prev) => {
-            if(prev === currentPattern.patternRows.length - 1) {
+            if (prev === currentPattern.patternRows.length - 1) {
               return prev;
             }
-            return prev + 1
+            return prev + 1;
           });
           break;
         case "ArrowLeft":
           setCurrentXPosition((prev) => {
-            if(prev === 0) {
+            if (prev === 0) {
               return prev;
             }
-            return prev - 1
+            return prev - 1;
           });
           break;
         case "ArrowRight":
           setCurrentXPosition((prev) => {
-            if(prev === 4) {
+            if (prev === 4) {
               return prev;
             }
-            return prev + 1
+            return prev + 1;
           });
           break;
       }
@@ -69,18 +71,19 @@ function PatternEditor({ currentPattern }: PatternEditorProps) {
 
     setCurrentYPosition(0);
 
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("wheel", handleWheel);
+    editor.addEventListener("keydown", handleKeyDown);
+    editor.addEventListener("wheel", handleWheel);
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("wheel", handleWheel);
+      editor.removeEventListener("keydown", handleKeyDown);
+      editor.removeEventListener("wheel", handleWheel);
     };
   }, [currentPattern]);
 
   return (
     <div
+      tabIndex={1}
       ref={ref}
-      className="overflow-y-hidden h-screen select-none mx-auto my-4 bg-slate-800 drop-shadow-md font-mono text-slate-400 text-lg text-center"
+      className="overflow-y-hidden h-screen select-none mx-auto my-4 bg-slate-800 drop-shadow-md font-mono text-slate-400 text-lg text-center focus:border-2 focus:border-blue-500"
     >
       {currentPattern.patternRows.map((row, i) => (
         <EditorRow
