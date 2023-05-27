@@ -16,6 +16,8 @@ function PatternEditor({ currentPattern }: PatternEditorProps) {
     if (!editor) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      e.preventDefault()
+
       switch (e.key) {
         case "ArrowUp":
           setCurrentYPosition((prev) => {
@@ -84,7 +86,7 @@ function PatternEditor({ currentPattern }: PatternEditorProps) {
     <div
       tabIndex={1}
       ref={ref}
-      className="overflow-y-hidden h-screen select-none mx-auto my-4 bg-slate-800 drop-shadow-md font-mono text-slate-400 text-lg text-center focus:border-2 focus:border-blue-500"
+      className="overflow-y-hidden h-screen select-none mx-auto my-4 bg-slate-800 drop-shadow-md font-mono text-slate-400 text-lg text-center focus:border-2 focus:border-blue-500 outline-none"
     >
       {currentPattern.patternRows.map((row, i) => (
         <EditorRow
