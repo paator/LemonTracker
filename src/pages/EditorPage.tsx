@@ -4,26 +4,10 @@ import { useRef, useState, ChangeEvent } from "react";
 import Module from "../models/module";
 import VortexModuleConverter from "../services/vt-converter";
 import ModuleEditor from "../components/ModuleEditor/ModuleEditor";
-import file from "../assets/2019MmcMftnqNEStleforears.vt2";
 
 function EditorPage() {
   const fileLoaderInput = useRef<HTMLInputElement>(null);
   const [currentModule, updateCurrentModule] = useState(new Module());
-
-  useState(async () => {
-    const loadFile = async () => {
-      fetch(file)
-        .then((response) => response.blob())
-        .then(async (blob) => {
-          const converter = new VortexModuleConverter();
-          const lemonModule = await converter.convertToLemonModule(blob);
-
-          updateCurrentModule(lemonModule);
-        });
-    };
-
-    await loadFile();
-  });
 
   function newModule() {
     updateCurrentModule(new Module());
