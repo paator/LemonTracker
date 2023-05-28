@@ -3,31 +3,24 @@ import CellGroup from "./CellGroup";
 import ChannelRow from "./ChannelRow";
 import PatternRow from "../../models/pattern-row";
 import Channel from "../../models/channel";
-import {useRef} from "react";
+import { useRef } from "react";
+import { shallow } from "zustand/shallow";
+import { useStore } from "../../stores";
 
 type EditorRowProps = {
   row: PatternRow;
   index: number;
   channels: Channel[];
   bgEndOfBar?: string;
-  currentYPosition: number;
-  currentXPosition: number;
 };
 
-function EditorRow({
-  row,
-  index,
-  channels,
-  bgEndOfBar,
-  currentYPosition,
-  currentXPosition,
-}: EditorRowProps) {
+function EditorRow({ row, index, channels, bgEndOfBar }: EditorRowProps) {
   function applyStyle(
     selectedStyle?: string,
     normalStyle?: string,
     endStyle?: string
   ) {
-    if (currentYPosition === index) {
+    if (posY === index) {
       return selectedStyle;
     }
     if (index % 4 === 0) {
@@ -39,8 +32,20 @@ function EditorRow({
   const ref = useRef<HTMLDivElement>(null);
   const height = ref.current ? ref.current.offsetHeight : 0;
 
+  const { posX, posY } = useStore(
+    (state) => ({
+      posX: state.posX,
+      posY: state.posY,
+    }),
+    shallow
+  );
+
   return (
-    <div ref={ref} className="flex relative" style={{ top: `calc(${currentYPosition * -height}px + 50%)`}}>
+    <div
+      ref={ref}
+      className="flex relative"
+      style={{ top: `calc(${posY * -height}px + 50%)` }}
+    >
       <Cell
         className={
           applyStyle("bg-blue-800", "text-blue-300", "text-blue-200") + " px-2"
@@ -55,8 +60,7 @@ function EditorRow({
         value={row.envelopeValue}
         defaultCellStr="."
         allowZero={true}
-        isSelected={currentYPosition === index}
-        selectedXIndex={currentXPosition}
+        isYSelected={posY === index}
       />
       <span className="border border-slate-900" />
       <CellGroup
@@ -66,8 +70,7 @@ function EditorRow({
         value={row.noiseValue}
         defaultCellStr="."
         allowZero={true}
-        isSelected={currentYPosition === index}
-        selectedXIndex={currentXPosition}
+        isYSelected={posY === index}
       />
       <span className="border border-slate-900" />
       <ChannelRow

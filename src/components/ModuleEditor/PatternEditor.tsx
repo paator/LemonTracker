@@ -1,110 +1,64 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import Pattern from "../../models/pattern";
 import EditorRow from "./EditorRow";
+import { useStore } from "../../stores";
 
 type PatternEditorProps = {
   currentPattern: Pattern;
 };
 
 function PatternEditor({ currentPattern }: PatternEditorProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [currentYPosition, setCurrentYPosition] = useState(0);
-  const [currentXPosition, setCurrentXPosition] = useState(0);
+  const { incrementX, incrementY, decrementX, decrementY, setPosition } =
+    useStore((state) => ({
+      incrementX: state.incrementXBy,
+      incrementY: state.incrementYBy,
+      decrementX: state.decrementXBy,
+      decrementY: state.decrementYBy,
+      setPosition: state.setPosition,
+    }));
 
   useEffect(() => {
-    const editor = ref.current;
-    if (!editor) return;
+    setPosition(0, 0);
+  }, [currentPattern, setPosition]);
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      e.preventDefault();
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    e.preventDefault();
 
-      switch (e.key) {
-        case "ArrowUp":
-          setCurrentYPosition((prev) => {
-            if (prev === 0) {
-              return prev;
-            }
-            return prev - 1;
-          });
-          break;
-        case "ArrowDown":
-          setCurrentYPosition((prev) => {
-            if (prev === currentPattern.patternRows.length - 1) {
-              return prev;
-            }
-            return prev + 1;
-          });
-          break;
-        case "ArrowLeft":
-          setCurrentXPosition((prev) => {
-            if (prev === 0) {
-              return prev;
-            }
-            return prev - 1;
-          });
-          break;
-        case "ArrowRight":
-          setCurrentXPosition((prev) => {
-            if (prev === 4) {
-              return prev;
-            }
-            return prev + 1;
-          });
-          break;
-        case "PageUp":
-          setCurrentYPosition((prev) => {
-            if (prev < 0x10) {
-              return currentPattern.patternRows.length - 1;
-            }
-            return prev - 0x10;
-          });
-          break;
-        case "PageDown":
-          setCurrentYPosition((prev) => {
-            if (prev === currentPattern.patternRows.length - 1) {
-              return 0;
-            }
-            if (prev >= currentPattern.patternRows.length - 0x10) {
-              return currentPattern.patternRows.length - 1;
-            }
-            return prev + 0x10;
-          });
-          break;
-      }
-    };
+    switch (e.key) {
+      case "ArrowUp":
+        decrementY(1);
+        break;
+      case "ArrowDown":
+        incrementY(1);
+        break;
+      case "ArrowLeft":
+        decrementX(1);
+        break;
+      case "ArrowRight":
+        incrementX(1);
+        break;
+      case "PageUp":
+        decrementY(0x10);
+        break;
+      case "PageDown":
+        incrementY(0x10);
+        break;
+    }
+  };
 
-    const handleWheel = (e: WheelEvent) => {
-      if (e.deltaY < 0) {
-        setCurrentYPosition((prev) => {
-          if (prev === 0) {
-            return prev;
-          }
-          return prev - 1;
-        });
-      } else {
-        setCurrentYPosition((prev) => {
-          if (prev === currentPattern.patternRows.length - 1) {
-            return prev;
-          }
-          return prev + 1;
-        });
-      }
-    };
-
-    setCurrentYPosition(0);
-
-    editor.addEventListener("keydown", handleKeyDown);
-    editor.addEventListener("wheel", handleWheel);
-    return () => {
-      editor.removeEventListener("keydown", handleKeyDown);
-      editor.removeEventListener("wheel", handleWheel);
-    };
-  }, [currentPattern]);
+  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    if (e.deltaY < 0) {
+      decrementY(1);
+    } else {
+      incrementY(1);
+    }
+  };
 
   return (
     <div
+      onKeyDown={handleKeyDown}
+      onWheel={handleWheel}
       tabIndex={1}
-      ref={ref}
       className="overflow-y-hidden h-screen select-none mx-auto my-4 bg-slate-800 drop-shadow-md font-mono text-slate-400 text-lg text-center focus:border-2 focus:border-blue-500 outline-none"
     >
       {currentPattern.patternRows.map((row, i) => (
@@ -114,8 +68,6 @@ function PatternEditor({ currentPattern }: PatternEditorProps) {
           index={i}
           channels={currentPattern.channels}
           key={i}
-          currentYPosition={currentYPosition}
-          currentXPosition={currentXPosition}
         />
       ))}
     </div>
