@@ -1,30 +1,21 @@
-import React, { useCallback, useEffect, useState } from "react";
-import Module from "../../models/module";
 import PatternEditor from "./PatternEditor";
+import { useBoundStore } from "../../stores";
+import React from "react";
 
-type ModuleEditorProps = {
-  currentModule: Module;
-};
+function ModuleEditor() {
+  const { module, setModule, setPattern, currentPatternIndex, setPosition } =
+    useBoundStore((state) => ({
+      module: state.module,
+      setModule: state.setModule,
+      setPattern: state.setPattern,
+      setPosition: state.setPosition,
+      currentPatternIndex: state.currentPatternIndex,
+    }));
 
-function ModuleEditor({ currentModule }: ModuleEditorProps) {
-  const [module, setModule] = useState<Module>({ ...currentModule });
-  const [currentPattern, setCurrentPattern] = useState(
-    currentModule.patterns[0]
-  );
-  const [currentPatternIndex, setCurrentPatternIndex] = useState(0);
-
-  const changePattern = useCallback(
-    (index: number) => {
-      setCurrentPattern(currentModule.patterns[index]);
-      setCurrentPatternIndex(index);
-    },
-    [currentModule]
-  );
-
-  useEffect(() => {
-    setModule({ ...currentModule });
-    changePattern(0);
-  }, [currentModule, changePattern]);
+  function switchPattern(index: number) {
+    setPattern(index);
+    setPosition(0, 0);
+  }
 
   function changeModuleProp(field: string) {
     return (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,7 +57,7 @@ function ModuleEditor({ currentModule }: ModuleEditorProps) {
           ) : (
             <div
               key={i}
-              onClick={() => changePattern(i)}
+              onClick={() => switchPattern(i)}
               className="w-8 flex-shrink-0 cursor-pointer rounded-sm border border-slate-400 bg-slate-500 text-slate-900 hover:bg-slate-400"
             >
               {p.number}
@@ -74,7 +65,7 @@ function ModuleEditor({ currentModule }: ModuleEditorProps) {
           )
         )}
       </div>
-      <PatternEditor currentPattern={currentPattern} />
+      <PatternEditor />
     </div>
   );
 }

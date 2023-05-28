@@ -1,25 +1,27 @@
 import React, { useEffect } from "react";
-import Pattern from "../../models/pattern";
 import EditorRow from "./EditorRow";
-import { useStore } from "../../stores";
+import { useBoundStore } from "../../stores";
 
-type PatternEditorProps = {
-  currentPattern: Pattern;
-};
-
-function PatternEditor({ currentPattern }: PatternEditorProps) {
-  const { incrementX, incrementY, decrementX, decrementY, setPosition } =
-    useStore((state) => ({
-      incrementX: state.incrementXBy,
-      incrementY: state.incrementYBy,
-      decrementX: state.decrementXBy,
-      decrementY: state.decrementYBy,
-      setPosition: state.setPosition,
-    }));
+function PatternEditor() {
+  const {
+    incrementX,
+    incrementY,
+    decrementX,
+    decrementY,
+    setPosition,
+    pattern,
+  } = useBoundStore((state) => ({
+    incrementX: state.incrementXBy,
+    incrementY: state.incrementYBy,
+    decrementX: state.decrementXBy,
+    decrementY: state.decrementYBy,
+    setPosition: state.setPosition,
+    pattern: state.currentPattern,
+  }));
 
   useEffect(() => {
     setPosition(0, 0);
-  }, [currentPattern, setPosition]);
+  }, [setPosition]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -61,14 +63,8 @@ function PatternEditor({ currentPattern }: PatternEditorProps) {
       tabIndex={1}
       className="overflow-y-hidden h-screen select-none mx-auto my-4 bg-slate-800 drop-shadow-md font-mono text-slate-400 text-lg text-center focus:border-2 focus:border-blue-500 outline-none"
     >
-      {currentPattern.patternRows.map((row, i) => (
-        <EditorRow
-          bgEndOfBar={"bg-slate-700"}
-          row={row}
-          index={i}
-          channels={currentPattern.channels}
-          key={i}
-        />
+      {pattern.patternRows.map((row, i) => (
+        <EditorRow bgEndOfBar={"bg-slate-700"} row={row} index={i} key={i} />
       ))}
     </div>
   );

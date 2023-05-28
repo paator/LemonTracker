@@ -18,4 +18,8 @@ export default class Pattern {
     this.patternRows = patternRows;
     this.isLoopPoint = isLoopPoint;
   }
+
+  public get length(): number {
+    return this.patternRows.length;
+  }
 }

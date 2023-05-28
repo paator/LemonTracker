@@ -2,19 +2,17 @@ import Cell from "./Cell";
 import CellGroup from "./CellGroup";
 import ChannelRow from "./ChannelRow";
 import PatternRow from "../../models/pattern-row";
-import Channel from "../../models/channel";
 import { useRef } from "react";
 import { shallow } from "zustand/shallow";
-import { useStore } from "../../stores";
+import { useBoundStore } from "../../stores";
 
 type EditorRowProps = {
   row: PatternRow;
   index: number;
-  channels: Channel[];
   bgEndOfBar?: string;
 };
 
-function EditorRow({ row, index, channels, bgEndOfBar }: EditorRowProps) {
+function EditorRow({ row, index, bgEndOfBar }: EditorRowProps) {
   function applyStyle(
     selectedStyle?: string,
     normalStyle?: string,
@@ -32,10 +30,11 @@ function EditorRow({ row, index, channels, bgEndOfBar }: EditorRowProps) {
   const ref = useRef<HTMLDivElement>(null);
   const height = ref.current ? ref.current.offsetHeight : 0;
 
-  const { posX, posY } = useStore(
+  const { posX, posY, pattern } = useBoundStore(
     (state) => ({
       posX: state.posX,
       posY: state.posY,
+      pattern: state.currentPattern,
     }),
     shallow
   );
@@ -75,17 +74,17 @@ function EditorRow({ row, index, channels, bgEndOfBar }: EditorRowProps) {
       <span className="border border-slate-900" />
       <ChannelRow
         className={applyStyle("bg-blue-800")}
-        row={channels[0].channelRows[index]}
+        row={pattern.channels[0].channelRows[index]}
       />
       <span className="border border-slate-900" />
       <ChannelRow
         className={applyStyle("bg-blue-800")}
-        row={channels[1].channelRows[index]}
+        row={pattern.channels[1].channelRows[index]}
       />
       <span className="border border-slate-900" />
       <ChannelRow
         className={applyStyle("bg-blue-800")}
-        row={channels[2].channelRows[index]}
+        row={pattern.channels[2].channelRows[index]}
       />
     </div>
   );

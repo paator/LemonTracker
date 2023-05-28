@@ -1,16 +1,22 @@
 import EditorButton from "../components/EditorMenu/EditorButton";
 import EditorMenu from "../components/EditorMenu/EditorMenu";
-import { useRef, useState, ChangeEvent } from "react";
+import { useRef, ChangeEvent } from "react";
 import Module from "../models/module";
 import VortexModuleConverter from "../services/vt-converter";
 import ModuleEditor from "../components/ModuleEditor/ModuleEditor";
+import { useBoundStore } from "../stores";
 
 function EditorPage() {
+  const { setModule, setPattern } = useBoundStore((state) => ({
+    setModule: state.setModule,
+    setPattern: state.setPattern,
+  }));
+
   const fileLoaderInput = useRef<HTMLInputElement>(null);
-  const [currentModule, updateCurrentModule] = useState(new Module());
 
   function newModule() {
-    updateCurrentModule(new Module());
+    setModule(new Module());
+    setPattern(0);
   }
 
   function loadModule() {
@@ -29,7 +35,8 @@ function EditorPage() {
       new Blob([file], { type: file.type })
     );
 
-    updateCurrentModule(lemonModule);
+    setModule(lemonModule);
+    setPattern(0);
   }
 
   return (
@@ -39,7 +46,7 @@ function EditorPage() {
           <EditorButton onClick={newModule}>New Track</EditorButton>
           <EditorButton onClick={loadModule}>Load Module</EditorButton>
         </EditorMenu>
-        <ModuleEditor currentModule={currentModule} />
+        <ModuleEditor />
       </div>
       <input
         ref={fileLoaderInput}
