@@ -14,7 +14,7 @@ function ChannelRow({ row, className }: ChannelRowProps) {
       </span>
       <span className="text-blue-300">
         <Cell
-          str={row.instrument.toString(16).toUpperCase()}
+          str={row.instrument.toString(32).toUpperCase()}
           defaultDisplayValue="."
         />
         <Cell
