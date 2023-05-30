@@ -1,11 +1,14 @@
 import classNames from "classnames";
+import { useBoundStore } from "../../stores";
+import classnames from "classnames";
 
 type CellProps = {
   str: string;
+  xPositionInGrid?: number | null;
+  yPositionInGrid: number;
   defaultDisplayValue?: string;
   allowZero?: boolean;
   className?: string;
-  isSelected?: boolean;
 };
 
 function Cell({
@@ -13,17 +16,25 @@ function Cell({
   defaultDisplayValue,
   allowZero,
   className,
-  isSelected,
+  xPositionInGrid = null,
+  yPositionInGrid,
 }: CellProps) {
+  const posX = useBoundStore((state) => state.posX);
+  const posY = useBoundStore((state) => state.posY);
+
   const isValueOrDefault =
     (defaultDisplayValue && str === "0" && !allowZero) ||
     str === defaultDisplayValue;
 
   const cellClasses = classNames(
-    { "text-slate-500": isValueOrDefault },
     {
-      "bg-blue-100 text-black animate-[pulse_1s_ease-in-out_infinite]":
-        isSelected,
+      "text-blue-300": yPositionInGrid! % 4,
+      "text-blue-200": yPositionInGrid % 4 === 0,
+      "bg-blue-800": posY === yPositionInGrid,
+      "bg-slate-700": yPositionInGrid % 4 === 0 && posY !== yPositionInGrid,
+      "text-slate-500": isValueOrDefault,
+      "bg-blue-200":
+        xPositionInGrid && xPositionInGrid === posX && posY === yPositionInGrid,
     },
     className
   );

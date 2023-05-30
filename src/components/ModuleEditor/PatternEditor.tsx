@@ -64,7 +64,7 @@ function PatternEditor() {
       className="overflow-y-hidden h-screen select-none mx-auto my-4 bg-slate-800 drop-shadow-md font-mono text-slate-400 text-lg text-center focus:border-2 focus:border-blue-500 outline-none"
     >
       {pattern.patternRows.map((row, i) => (
-        <EditorRow bgEndOfBar={"bg-slate-700"} row={row} index={i} key={i} />
+        <EditorRow row={row} index={i} key={i} />
       ))}
     </div>
   );
