@@ -6,11 +6,9 @@ type CellGroupProps = {
   radix: number;
   value: number;
   defaultCellStr: string;
-  xPositionInGrid: number;
-  yPositionInGrid: number;
-  className?: string;
   allowZero?: boolean;
-  selectedXIndex?: number;
+  yPositionInGrid: number;
+  xPositionInGrid: number;
 };
 
 function CellGroup({
@@ -18,10 +16,9 @@ function CellGroup({
   radix,
   value,
   defaultCellStr,
-  className,
   allowZero,
-  xPositionInGrid,
   yPositionInGrid,
+  xPositionInGrid,
 }: CellGroupProps) {
   const createValueWithDefaultPrefix = useCallback(() => {
     const num = value === 0 ? "" : value.toString(radix).toUpperCase();
@@ -37,18 +34,18 @@ function CellGroup({
   }, [value, createValueWithDefaultPrefix]);
 
   return (
-    <div className={className}>
+    <>
       {valueWithDefaultPrefix.split("").map((char, i) => (
         <Cell
+          yPositionInGrid={yPositionInGrid}
+          xPositionInGrid={i + xPositionInGrid}
           defaultDisplayValue={defaultCellStr}
           key={i}
           str={char}
           allowZero={allowZero}
-          xPositionInGrid={xPositionInGrid + i}
-          yPositionInGrid={yPositionInGrid}
         />
       ))}
-    </div>
+    </>
   );
 }
 

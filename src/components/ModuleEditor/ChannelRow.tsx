@@ -1,79 +1,80 @@
 import Cell from "./Cell";
 import ChannelRowModel from "../../models/channel-row";
+import classNames from "classnames";
 
 type ChannelRowProps = {
   row: ChannelRowModel;
   className?: string;
-  xPositionInGrid: number;
   yPositionInGrid: number;
+  xPositionInGrid: number;
 };
 
 function ChannelRow({
   row,
   className,
-  xPositionInGrid,
   yPositionInGrid,
+  xPositionInGrid,
 }: ChannelRowProps) {
   return (
-    <div className={className + " flex"}>
+    <div className={classNames(className, "flex", "gap-2")}>
       <span className="text-blue-100">
         <Cell
+          yPositionInGrid={yPositionInGrid}
+          xPositionInGrid={xPositionInGrid}
           str={row.noteData.toString()}
           defaultDisplayValue="---"
-          xPositionInGrid={xPositionInGrid * 9}
-          yPositionInGrid={yPositionInGrid}
         />
       </span>
       <span className="text-blue-300">
         <Cell
+          yPositionInGrid={yPositionInGrid}
+          xPositionInGrid={xPositionInGrid + 1}
           str={row.instrument.toString(16).toUpperCase()}
           defaultDisplayValue="."
-          xPositionInGrid={xPositionInGrid * 9 + 1}
-          yPositionInGrid={yPositionInGrid}
         />
         <Cell
+          yPositionInGrid={yPositionInGrid}
+          xPositionInGrid={xPositionInGrid + 2}
           str={row.envelope.toString(16).toUpperCase()}
           defaultDisplayValue="."
-          xPositionInGrid={xPositionInGrid * 9 + 2}
-          yPositionInGrid={yPositionInGrid}
         />
         <Cell
+          yPositionInGrid={yPositionInGrid}
+          xPositionInGrid={xPositionInGrid + 3}
           str={row.ornament.toString(16).toUpperCase()}
           defaultDisplayValue="."
-          xPositionInGrid={xPositionInGrid * 9 + 3}
-          yPositionInGrid={yPositionInGrid}
         />
         <Cell
+          yPositionInGrid={yPositionInGrid}
+          xPositionInGrid={xPositionInGrid + 4}
           str={row.volume.toString(16).toUpperCase()}
           defaultDisplayValue="."
-          xPositionInGrid={xPositionInGrid * 9 + 4}
-          yPositionInGrid={yPositionInGrid}
         />
       </span>
       <span className="text-yellow-200">
         <Cell
+          yPositionInGrid={yPositionInGrid}
+          xPositionInGrid={xPositionInGrid + 5}
           str={row.effect.toString(16).toUpperCase()}
           defaultDisplayValue="."
-          xPositionInGrid={xPositionInGrid * 9 + 5}
-          yPositionInGrid={yPositionInGrid}
         />
         <Cell
+          yPositionInGrid={yPositionInGrid}
+          xPositionInGrid={xPositionInGrid + 6}
           str={row.effectParamX.toString(16).toUpperCase()}
           defaultDisplayValue="."
-          xPositionInGrid={xPositionInGrid * 9 + 6}
-          yPositionInGrid={yPositionInGrid}
         />
         <Cell
+          yPositionInGrid={yPositionInGrid}
+          xPositionInGrid={xPositionInGrid + 7}
           str={row.effectParamY.toString(16).toUpperCase()}
           defaultDisplayValue="."
-          xPositionInGrid={xPositionInGrid * 9 + 7}
-          yPositionInGrid={yPositionInGrid}
         />
         <Cell
+          yPositionInGrid={yPositionInGrid}
+          xPositionInGrid={xPositionInGrid + 8}
           str={row.effectParamZ.toString(16).toUpperCase()}
           defaultDisplayValue="."
-          xPositionInGrid={xPositionInGrid * 9 + 8}
-          yPositionInGrid={yPositionInGrid}
         />
       </span>
     </div>

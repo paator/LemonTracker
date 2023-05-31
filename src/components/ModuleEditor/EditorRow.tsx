@@ -1,10 +1,10 @@
 import React, { useRef } from "react";
-
 import Cell from "./Cell";
 import CellGroup from "./CellGroup";
 import ChannelRow from "./ChannelRow";
 import PatternRow from "../../models/pattern-row";
 import { useBoundStore } from "../../stores";
+import RowContainer from "./RowContainer";
 
 type EditorRowProps = {
   row: PatternRow;
@@ -27,49 +27,60 @@ function EditorRow({ row, index }: EditorRowProps) {
       className="flex relative"
       style={{ top: `calc(${posY * -height}px + 50%)` }}
     >
-      <Cell
-        str={index.toString(16).padStart(2, "0").toUpperCase()}
-        yPositionInGrid={index}
-        className="px-2"
-      />
+      <RowContainer yPositionInGrid={index}>
+        <Cell
+          yPositionInGrid={index}
+          str={index.toString(16).padStart(2, "0").toUpperCase()}
+        />
+      </RowContainer>
       <span className="border border-slate-900" />
-      <CellGroup
-        maxLength={4}
-        radix={16}
-        value={row.envelopeValue}
-        defaultCellStr="."
-        allowZero={true}
-        xPositionInGrid={0}
-        yPositionInGrid={index}
-      />
+      <RowContainer yPositionInGrid={index}>
+        <CellGroup
+          maxLength={4}
+          radix={16}
+          value={row.envelopeValue}
+          defaultCellStr="."
+          allowZero={true}
+          yPositionInGrid={index}
+          xPositionInGrid={0}
+        />
+      </RowContainer>
       <span className="border border-slate-900" />
-      <CellGroup
-        maxLength={2}
-        radix={16}
-        value={row.noiseValue}
-        defaultCellStr="."
-        allowZero={true}
-        xPositionInGrid={1}
-        yPositionInGrid={index}
-      />
+      <RowContainer yPositionInGrid={index}>
+        <CellGroup
+          maxLength={2}
+          radix={16}
+          value={row.noiseValue}
+          defaultCellStr="."
+          allowZero={true}
+          yPositionInGrid={index}
+          xPositionInGrid={4}
+        />
+      </RowContainer>
       <span className="border border-slate-900" />
-      <ChannelRow
-        row={pattern.channels[0].channelRows[index]}
-        xPositionInGrid={2}
-        yPositionInGrid={index}
-      />
+      <RowContainer yPositionInGrid={index}>
+        <ChannelRow
+          row={pattern.channels[0].channelRows[index]}
+          yPositionInGrid={index}
+          xPositionInGrid={6}
+        />
+      </RowContainer>
       <span className="border border-slate-900" />
-      <ChannelRow
-        row={pattern.channels[1].channelRows[index]}
-        xPositionInGrid={3}
-        yPositionInGrid={index}
-      />
+      <RowContainer yPositionInGrid={index}>
+        <ChannelRow
+          row={pattern.channels[1].channelRows[index]}
+          yPositionInGrid={index}
+          xPositionInGrid={15}
+        />
+      </RowContainer>
       <span className="border border-slate-900" />
-      <ChannelRow
-        row={pattern.channels[2].channelRows[index]}
-        xPositionInGrid={4}
-        yPositionInGrid={index}
-      />
+      <RowContainer yPositionInGrid={index}>
+        <ChannelRow
+          row={pattern.channels[2].channelRows[index]}
+          yPositionInGrid={index}
+          xPositionInGrid={24}
+        />
+      </RowContainer>
     </div>
   );
 }
