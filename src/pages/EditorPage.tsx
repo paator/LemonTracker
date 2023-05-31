@@ -5,7 +5,6 @@ import Module from "../models/module";
 import VortexModuleConverter from "../services/vt-converter";
 import ModuleEditor from "../components/ModuleEditor/ModuleEditor";
 import { useBoundStore } from "../stores";
-import classNames from "classnames";
 
 function EditorPage() {
   const { setModule, setPattern } = useBoundStore((state) => ({
@@ -39,8 +38,6 @@ function EditorPage() {
     setModule(lemonModule);
     setPattern(0);
   }
-
-  const classes = classNames({});
 
   return (
     <>
