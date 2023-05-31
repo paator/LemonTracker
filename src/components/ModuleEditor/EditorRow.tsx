@@ -1,10 +1,10 @@
+import React, { useRef } from "react";
 import Cell from "./Cell";
 import CellGroup from "./CellGroup";
 import ChannelRow from "./ChannelRow";
 import PatternRow from "../../models/pattern-row";
-import { useRef } from "react";
-import { shallow } from "zustand/shallow";
 import { useBoundStore } from "../../stores";
+import RowContainer from "./RowContainer";
 
 type EditorRowProps = {
   row: PatternRow;
@@ -12,32 +12,14 @@ type EditorRowProps = {
   bgEndOfBar?: string;
 };
 
-function EditorRow({ row, index, bgEndOfBar }: EditorRowProps) {
-  function applyStyle(
-    selectedStyle?: string,
-    normalStyle?: string,
-    endStyle?: string
-  ) {
-    if (posY === index) {
-      return selectedStyle;
-    }
-    if (index % 4 === 0) {
-      return endStyle + " " + bgEndOfBar;
-    }
-    return normalStyle;
-  }
-
+function EditorRow({ row, index }: EditorRowProps) {
   const ref = useRef<HTMLDivElement>(null);
   const height = ref.current ? ref.current.offsetHeight : 0;
 
-  const { posX, posY, pattern } = useBoundStore(
-    (state) => ({
-      posX: state.posX,
-      posY: state.posY,
-      pattern: state.currentPattern,
-    }),
-    shallow
-  );
+  const { posY, pattern } = useBoundStore((state) => ({
+    posY: state.posY,
+    pattern: state.currentPattern,
+  }));
 
   return (
     <div
@@ -45,47 +27,60 @@ function EditorRow({ row, index, bgEndOfBar }: EditorRowProps) {
       className="flex relative"
       style={{ top: `calc(${posY * -height}px + 50%)` }}
     >
-      <Cell
-        className={
-          applyStyle("bg-blue-800", "text-blue-300", "text-blue-200") + " px-2"
-        }
-        str={index.toString(16).padStart(2, "0").toUpperCase()}
-      />
+      <RowContainer yPositionInGrid={index}>
+        <Cell
+          yPositionInGrid={index}
+          str={index.toString(16).padStart(2, "0").toUpperCase()}
+        />
+      </RowContainer>
       <span className="border border-slate-900" />
-      <CellGroup
-        className={applyStyle("bg-blue-800") + " px-2"}
-        maxLength={4}
-        radix={16}
-        value={row.envelopeValue}
-        defaultCellStr="."
-        allowZero={true}
-        isYSelected={posY === index}
-      />
+      <RowContainer yPositionInGrid={index}>
+        <CellGroup
+          maxLength={4}
+          radix={16}
+          value={row.envelopeValue}
+          defaultCellStr="."
+          allowZero={true}
+          yPositionInGrid={index}
+          xPositionInGrid={0}
+        />
+      </RowContainer>
       <span className="border border-slate-900" />
-      <CellGroup
-        className={applyStyle("bg-blue-800") + " px-2"}
-        maxLength={2}
-        radix={16}
-        value={row.noiseValue}
-        defaultCellStr="."
-        allowZero={true}
-        isYSelected={posY === index}
-      />
+      <RowContainer yPositionInGrid={index}>
+        <CellGroup
+          maxLength={2}
+          radix={16}
+          value={row.noiseValue}
+          defaultCellStr="."
+          allowZero={true}
+          yPositionInGrid={index}
+          xPositionInGrid={4}
+        />
+      </RowContainer>
       <span className="border border-slate-900" />
-      <ChannelRow
-        className={applyStyle("bg-blue-800")}
-        row={pattern.channels[0].channelRows[index]}
-      />
+      <RowContainer yPositionInGrid={index}>
+        <ChannelRow
+          row={pattern.channels[0].channelRows[index]}
+          yPositionInGrid={index}
+          xPositionInGrid={6}
+        />
+      </RowContainer>
       <span className="border border-slate-900" />
-      <ChannelRow
-        className={applyStyle("bg-blue-800")}
-        row={pattern.channels[1].channelRows[index]}
-      />
+      <RowContainer yPositionInGrid={index}>
+        <ChannelRow
+          row={pattern.channels[1].channelRows[index]}
+          yPositionInGrid={index}
+          xPositionInGrid={15}
+        />
+      </RowContainer>
       <span className="border border-slate-900" />
-      <ChannelRow
-        className={applyStyle("bg-blue-800")}
-        row={pattern.channels[2].channelRows[index]}
-      />
+      <RowContainer yPositionInGrid={index}>
+        <ChannelRow
+          row={pattern.channels[2].channelRows[index]}
+          yPositionInGrid={index}
+          xPositionInGrid={24}
+        />
+      </RowContainer>
     </div>
   );
 }
