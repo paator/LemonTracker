@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+
 import Cell from "./Cell";
 import CellGroup from "./CellGroup";
 import ChannelRow from "./ChannelRow";
@@ -33,7 +34,7 @@ function EditorRow({ row, index }: EditorRowProps) {
           str={index.toString(16).padStart(2, "0").toUpperCase()}
         />
       </RowContainer>
-      <span className="border border-slate-900" />
+      <Border/>
       <RowContainer yPositionInGrid={index}>
         <CellGroup
           maxLength={4}
@@ -45,7 +46,7 @@ function EditorRow({ row, index }: EditorRowProps) {
           xPositionInGrid={0}
         />
       </RowContainer>
-      <span className="border border-slate-900" />
+      <Border/>
       <RowContainer yPositionInGrid={index}>
         <CellGroup
           maxLength={2}
@@ -57,7 +58,7 @@ function EditorRow({ row, index }: EditorRowProps) {
           xPositionInGrid={4}
         />
       </RowContainer>
-      <span className="border border-slate-900" />
+      <Border/>
       <RowContainer yPositionInGrid={index}>
         <ChannelRow
           row={pattern.channels[0].channelRows[index]}
@@ -65,7 +66,7 @@ function EditorRow({ row, index }: EditorRowProps) {
           xPositionInGrid={6}
         />
       </RowContainer>
-      <span className="border border-slate-900" />
+      <Border/>
       <RowContainer yPositionInGrid={index}>
         <ChannelRow
           row={pattern.channels[1].channelRows[index]}
@@ -73,7 +74,7 @@ function EditorRow({ row, index }: EditorRowProps) {
           xPositionInGrid={15}
         />
       </RowContainer>
-      <span className="border border-slate-900" />
+      <Border/>
       <RowContainer yPositionInGrid={index}>
         <ChannelRow
           row={pattern.channels[2].channelRows[index]}
@@ -83,6 +84,10 @@ function EditorRow({ row, index }: EditorRowProps) {
       </RowContainer>
     </div>
   );
+}
+
+function Border() {
+  return <span className="border border-slate-900" />;
 }
 
 export default EditorRow;
