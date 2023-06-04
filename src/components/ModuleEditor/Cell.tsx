@@ -16,10 +16,17 @@ function Cell({
   xPositionInGrid,
   yPositionInGrid,
 }: CellProps) {
-  const { posX, posY } = useBoundStore((state) => ({
+  const { posX, posY, setPosition } = useBoundStore((state) => ({
     posX: state.posX,
     posY: state.posY,
+    setPosition: state.setPosition,
   }));
+
+  function cursorToCellPosition() {
+    if(xPositionInGrid === undefined) return;
+
+    return setPosition(xPositionInGrid, yPositionInGrid);
+  }
 
   const isValueOrDefault =
     (defaultDisplayValue && str === "0" && !allowZero) ||
@@ -33,9 +40,14 @@ function Cell({
       xPositionInGrid !== undefined &&
       xPositionInGrid === posX &&
       yPositionInGrid === posY,
+    "": true,
   });
 
-  return <span className={classes}>{displayValue}</span>;
+  return (
+    <span onClick={cursorToCellPosition} className={classes}>
+      {displayValue}
+    </span>
+  );
 }
 
 export default Cell;
