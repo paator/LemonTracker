@@ -57,7 +57,7 @@ function PatternEditor() {
     }
   };
 
-  const onWheelThrottled = useMemo(() => throttle(handleWheel, 100), []);
+  const onWheelThrottled = useMemo(() => throttle(handleWheel, 20), []);
 
   return (
     <div
