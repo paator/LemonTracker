@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, {useEffect, useMemo} from "react";
 import EditorRow from "./EditorRow";
 import { useBoundStore } from "../../stores";
+import throttle from "lodash.throttle";
 
 function PatternEditor() {
   const {
@@ -56,10 +57,12 @@ function PatternEditor() {
     }
   };
 
+  const onWheelThrottled = useMemo(() => throttle(handleWheel, 100), []);
+
   return (
     <div
       onKeyDown={handleKeyDown}
-      onWheel={handleWheel}
+      onWheel={onWheelThrottled}
       tabIndex={1}
       className="overflow-y-hidden h-screen select-none mx-auto my-4 bg-slate-800 drop-shadow-md font-mono text-slate-400 text-lg text-center focus:border-2 focus:border-blue-500 outline-none"
     >
