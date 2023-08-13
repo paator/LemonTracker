@@ -49,15 +49,17 @@ function PatternEditor() {
     }
   };
 
-  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
-    if (e.deltaY < 0) {
-      decrementY(1);
-    } else {
-      incrementY(1);
-    }
-  };
+  const onWheelThrottled = useMemo(() => {
+    const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+      if (e.deltaY < 0) {
+        decrementY(1);
+      } else {
+        incrementY(1);
+      }
+    };
 
-  const onWheelThrottled = useMemo(() => throttle(handleWheel, 20), []);
+    return throttle(handleWheel, 20);
+  }, [decrementY, incrementY]);
 
   return (
     <div
