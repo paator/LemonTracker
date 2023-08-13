@@ -36,7 +36,7 @@ function Cell({
 
   const classes = classNames({
     "text-slate-500": isValueOrDefault,
-    "bg-blue-200 text-blue-950 animate-[pulse_1.2s_linear_infinite] font-bold":
+    "bg-blue-200 text-black animate-[pulse_1.2s_linear_infinite]":
       xPositionInGrid !== undefined &&
       xPositionInGrid === posX &&
       yPositionInGrid === posY,
