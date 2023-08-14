@@ -1,29 +1,26 @@
 import EditorButton from "../components/EditorMenu/EditorButton";
 import EditorMenu from "../components/EditorMenu/EditorMenu";
-import { useRef, ChangeEvent } from "react";
+import { useRef, ChangeEvent, useCallback } from "react";
 import Module from "../models/module";
 import VortexModuleConverter from "../services/vt-converter";
 import ModuleEditor from "../components/ModuleEditor/ModuleEditor";
 import { useBoundStore } from "../stores";
 
 function EditorPage() {
-  const { setModule, setPattern } = useBoundStore((state) => ({
-    setModule: state.setModule,
-    setPattern: state.setPattern,
-  }));
+  const setModule = useBoundStore((state) => state.setModule);
 
   const fileLoaderInput = useRef<HTMLInputElement>(null);
 
-  function newModule() {
+  const newModule = useCallback(() => {
     setModule(new Module());
-    setPattern(0);
-  }
+    useBoundStore.getState().setPattern(0);
+  }, [setModule]);
 
-  function loadModule() {
+  const loadModule = useCallback(() => {
     if (fileLoaderInput.current) {
       fileLoaderInput.current.click();
     }
-  }
+  }, [fileLoaderInput]);
 
   async function handleFileSelect(event: ChangeEvent<HTMLInputElement>) {
     if (!event.target.files) return;
@@ -36,7 +33,7 @@ function EditorPage() {
     );
 
     setModule(lemonModule);
-    setPattern(0);
+    useBoundStore.getState().setPattern(0);
   }
 
   return (
