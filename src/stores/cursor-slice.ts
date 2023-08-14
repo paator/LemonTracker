@@ -1,5 +1,6 @@
 import { StateCreator } from "zustand";
-import { ModuleSlice } from "./module-slice";
+import {PatternSlice} from "./pattern-slice";
+import {ModuleSlice} from "./module-slice";
 
 export interface CursorSlice {
   posX: number;
@@ -12,7 +13,7 @@ export interface CursorSlice {
 }
 
 export const createCursorSlice: StateCreator<
-  CursorSlice & ModuleSlice,
+  CursorSlice & PatternSlice & ModuleSlice,
   [["zustand/devtools", never]],
   [],
   CursorSlice
@@ -77,7 +78,7 @@ export const createCursorSlice: StateCreator<
           x = 0;
         }
 
-        if (y > state.module.patterns.length - 1) {
+        if (y > state.patterns.length - 1) {
           y = state.posY;
         } else if (y < 0) {
           y = 0;

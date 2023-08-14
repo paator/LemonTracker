@@ -1,27 +1,33 @@
 import PatternEditor from "./PatternEditor";
 import { useBoundStore } from "../../stores";
-import React from "react";
+import React, {useCallback} from "react";
 
 function ModuleEditor() {
-  const { module, setModule, setPattern, currentPatternIndex, setPosition } =
+  const { title, author, patterns, setPattern, currentPatternIndex, setPosition,
+  setTitle, setAuthor } =
     useBoundStore((state) => ({
-      module: state.module,
-      setModule: state.setModule,
+      title: state.title,
+      author: state.author,
+      patterns: state.patterns,
       setPattern: state.setPattern,
       setPosition: state.setPosition,
+      setTitle: state.setTitle,
+      setAuthor: state.setAuthor,
       currentPatternIndex: state.currentPatternIndex,
     }));
 
-  function switchPattern(index: number) {
+  const switchPattern = useCallback((index: number) => {
     setPattern(index);
     setPosition(0, 0);
-  }
+  }, [setPattern, setPosition]);
 
-  function changeModuleProp(field: string) {
-    return (e: React.ChangeEvent<HTMLInputElement>) => {
-      setModule({ ...module, [field]: e.target.value });
-    };
-  }
+  const changeTitle = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  }, [setTitle]);
+
+  const changeAuthor = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setAuthor(e.target.value);
+  }, [setAuthor]);
 
   return (
     <div className="w-full min-h-0 self-center rounded-xl bg-slate-600 px-4 shadow-slate-900 drop-shadow-md max-w-[1080px] flex flex-col">
@@ -31,8 +37,8 @@ function ModuleEditor() {
           <input
             type="text"
             className="mt-2 block w-full rounded-md bg-white px-2 text-sm shadow-sm"
-            value={module.title}
-            onChange={changeModuleProp("title")}
+            value={title}
+            onChange={changeTitle}
           />
         </div>
         <div className="grow">
@@ -40,13 +46,13 @@ function ModuleEditor() {
           <input
             type="text"
             className="mt-2 block w-full rounded-md bg-white px-2 text-sm shadow-sm"
-            value={module.author}
-            onChange={changeModuleProp("author")}
+            value={author}
+            onChange={changeAuthor}
           />
         </div>
       </div>
       <div className="flex flex-shrink-0 overflow-auto text-center font-mono text-xl shadow-slate-900 gap-[2px] select-none">
-        {module.patterns.map((p, i) =>
+        {patterns.map((p, i) =>
           currentPatternIndex === i ? (
             <div
               key={i}
