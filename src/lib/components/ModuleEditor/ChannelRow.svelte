@@ -13,16 +13,16 @@
 </script>
 
 <div class={`${className} flex gap-2`}>
-	<span class="text-blue-100">
+	<div class="text-blue-100">
 		<Cell
 			{yPositionInGrid}
 			{xPositionInGrid}
 			str={row.noteData.toString()}
 			defaultDisplayValue="---"
 		/>
-	</span>
+	</div>
 
-	<span class="text-blue-300">
+	<div class="text-blue-300 flex">
 		<Cell
 			{yPositionInGrid}
 			xPositionInGrid={xPositionInGrid + 1}
@@ -47,9 +47,9 @@
 			str={toHexString(row.volume)}
 			defaultDisplayValue="."
 		/>
-	</span>
+	</div>
 
-	<span class="text-yellow-200">
+	<div class="text-yellow-200 flex">
 		<Cell
 			{yPositionInGrid}
 			xPositionInGrid={xPositionInGrid + 5}
@@ -74,5 +74,5 @@
 			str={toHexString(row.effectParamZ)}
 			defaultDisplayValue="."
 		/>
-	</span>
+	</div>
 </div>

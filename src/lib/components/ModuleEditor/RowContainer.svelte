@@ -9,7 +9,7 @@
 	$: isActivePosition = $cursorPosition.posY === yPositionInGrid;
 </script>
 
-<span
+<div
 	class="{className} px-2"
 	class:text-blue-300={isNotMultipleOfFour}
 	class:text-blue-200={isMultipleOfFour}
@@ -17,4 +17,4 @@
 	class:bg-slate-700={isMultipleOfFour && !isActivePosition}
 >
 	<slot />
-</span>
+</div>

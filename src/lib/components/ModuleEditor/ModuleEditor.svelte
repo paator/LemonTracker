@@ -7,9 +7,6 @@
 		patterns
 	} from '$lib/stores/stores.js';
 	import PatternEditor from './PatternEditor.svelte';
-	import { quintOut } from 'svelte/easing';
-	import { flip } from 'svelte/animate';
-	import { fade } from 'svelte/transition';
 
 	function switchPattern(index: number) {
 		currentPatternIndex.set(index);
@@ -43,8 +40,6 @@
 	>
 		{#each $patterns as pattern, i (i)}
 			<button
-				in:fade
-				animate:flip={{ duration: 200, easing: quintOut }}
 				class="w-8 flex-shrink-0 {i === $currentPatternIndex
 					? 'cursor-default rounded-sm border border-blue-400 bg-blue-600 text-slate-200'
 					: 'cursor-pointer rounded-sm border border-slate-400 bg-slate-500 text-slate-900 hover:bg-slate-400'}"
