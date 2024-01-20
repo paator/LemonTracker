@@ -1,8 +1,8 @@
-<script lang='ts'>
-	import EditorButton from "../components/EditorMenu/EditorButton.svelte";
-	import EditorMenu from "../components/EditorMenu/EditorMenu.svelte";
-	import Module from "../models/module";
-	import VortexModuleConverter from "../services/vt-converter";
+<script lang="ts">
+	import EditorButton from '../components/EditorMenu/EditorButton.svelte';
+	import EditorMenu from '../components/EditorMenu/EditorMenu.svelte';
+	import Module from '../models/module';
+	import VortexModuleConverter from '../services/vt-converter';
 	import { currentPatternIndex, setCurrentModule } from '../stores/stores.js';
 	import ModuleEditor from '../components/ModuleEditor/ModuleEditor.svelte';
 
@@ -40,6 +40,12 @@
 		<EditorButton on:click={newModule}>New Track</EditorButton>
 		<EditorButton on:click={loadModule}>Load Module</EditorButton>
 	</EditorMenu>
-	<ModuleEditor/>
+	<ModuleEditor />
 </div>
-<input bind:this={fileLoaderInput} hidden type="file" accept=".vt2,.pt3" on:change={handleFileSelect} />
+<input
+	bind:this={fileLoaderInput}
+	hidden
+	type="file"
+	accept=".vt2,.pt3"
+	on:change={handleFileSelect}
+/>

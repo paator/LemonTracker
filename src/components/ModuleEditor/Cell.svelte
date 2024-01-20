@@ -8,7 +8,7 @@
 	export let yPositionInGrid: number;
 
 	function cursorToCellPosition() {
-		if(xPositionInGrid === undefined) return;
+		if (xPositionInGrid === undefined) return;
 		cursorPosition.setPosition(xPositionInGrid, yPositionInGrid);
 	}
 
@@ -16,8 +16,7 @@
 		(defaultDisplayValue && str === '0' && !allowZero) || str == defaultDisplayValue;
 
 	$: isPositionMatched =
-		xPositionInGrid === $cursorPosition.posX &&
-		yPositionInGrid === $cursorPosition.posY
+		xPositionInGrid === $cursorPosition.posX && yPositionInGrid === $cursorPosition.posY;
 
 	$: displayValue = isValueOrDefault ? defaultDisplayValue : str;
 </script>
@@ -27,6 +26,7 @@
 	class:text-slate-500={isValueOrDefault}
 	class:bg-blue-50={isPositionMatched}
 	class:text-black={isPositionMatched}
-	class:animate-[pulse_1.2s_linear_infinite]={isPositionMatched}>
+	class:animate-[pulse_1.2s_linear_infinite]={isPositionMatched}
+>
 	{displayValue}
 </span>

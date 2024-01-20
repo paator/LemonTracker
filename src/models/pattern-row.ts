@@ -1,4 +1,4 @@
 export default class PatternRow {
-  envelopeValue = 0;
-  noiseValue = 0;
+	envelopeValue = 0;
+	noiseValue = 0;
 }

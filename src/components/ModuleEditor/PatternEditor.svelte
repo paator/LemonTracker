@@ -1,10 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import EditorRow from './EditorRow.svelte';
-	import {
-		cursorPosition,
-		currentPattern
-	} from '../../stores/stores.js';
+	import { cursorPosition, currentPattern } from '../../stores/stores.js';
 
 	onMount(() => {
 		cursorPosition.setPosition(0, 0);
