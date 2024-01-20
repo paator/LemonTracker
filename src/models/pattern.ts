@@ -1,25 +1,25 @@
-import Channel from "./channel.js";
-import PatternRow from "./pattern-row";
+import Channel from './channel.js';
+import type PatternRow from './pattern-row';
 
 export default class Pattern {
-  number: number;
-  channels: Channel[];
-  patternRows: PatternRow[];
-  isLoopPoint: boolean;
+	number: number;
+	channels: Channel[];
+	patternRows: PatternRow[];
+	isLoopPoint: boolean;
 
-  constructor(
-    number: number = 0,
-    channels: Channel[] = [new Channel(), new Channel(), new Channel()],
-    patternRows: any[] = [],
-    isLoopPoint: boolean = false
-  ) {
-    this.number = number;
-    this.channels = channels;
-    this.patternRows = patternRows;
-    this.isLoopPoint = isLoopPoint;
-  }
+	constructor(
+		number = 0,
+		channels: Channel[] = [new Channel(), new Channel(), new Channel()],
+		patternRows: PatternRow[] = [],
+		isLoopPoint = false
+	) {
+		this.number = number;
+		this.channels = channels;
+		this.patternRows = patternRows;
+		this.isLoopPoint = isLoopPoint;
+	}
 
-  public get length(): number {
-    return this.patternRows.length;
-  }
+	public get length(): number {
+		return this.patternRows.length;
+	}
 }

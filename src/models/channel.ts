@@ -1,4 +1,4 @@
-import ChannelRow from "./channel-row";
+import type ChannelRow from './channel-row';
 
 export default class Channel {
   channelRows: ChannelRow[];
