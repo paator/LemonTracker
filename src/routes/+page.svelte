@@ -1,10 +1,10 @@
 <script lang="ts">
-	import EditorButton from '../components/EditorMenu/EditorButton.svelte';
-	import EditorMenu from '../components/EditorMenu/EditorMenu.svelte';
-	import Module from '../models/module';
-	import VortexModuleConverter from '../services/vt-converter';
-	import { currentPatternIndex, setCurrentModule } from '../stores/stores.js';
-	import ModuleEditor from '../components/ModuleEditor/ModuleEditor.svelte';
+	import EditorButton from '$lib/components/EditorMenu/EditorButton.svelte';
+	import EditorMenu from '$lib/components/EditorMenu/EditorMenu.svelte';
+	import Module from '$lib/models/module';
+	import VortexModuleConverter from '$lib/services/vt-converter';
+	import { currentPatternIndex, setCurrentModule } from '$lib/stores/stores.js';
+	import ModuleEditor from '$lib/components/ModuleEditor/ModuleEditor.svelte';
 
 	let fileLoaderInput: HTMLInputElement;
 

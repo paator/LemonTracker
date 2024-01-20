@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cursorPosition } from '../../stores/stores.js';
+	import { cursorPosition } from '$lib/stores/stores.js';
 
 	export let yPositionInGrid: number;
 	export let className = '';

@@ -5,7 +5,7 @@
 		moduleAuthor,
 		moduleTitle,
 		patterns
-	} from '../../stores/stores.js';
+	} from '$lib/stores/stores.js';
 	import PatternEditor from './PatternEditor.svelte';
 	import { quintOut } from 'svelte/easing';
 	import { flip } from 'svelte/animate';

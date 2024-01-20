@@ -1,6 +1,6 @@
 import { derived, get, writable } from 'svelte/store';
-import Pattern from '../models/pattern';
-import type Module from '../models/module';
+import Pattern from '$lib/models/pattern';
+import type Module from '$lib/models/module';
 
 export const moduleTitle = writable('');
 export const moduleAuthor = writable('');

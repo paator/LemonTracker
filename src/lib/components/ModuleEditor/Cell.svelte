@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cursorPosition } from '../../stores/stores';
+	import { cursorPosition } from '$lib/stores/stores';
 
 	export let str: string;
 	export let defaultDisplayValue: string | undefined = undefined;

@@ -1,8 +1,8 @@
-import Module from '../models/module.js';
-import Pattern from '../models/pattern.js';
-import toModuleNote from '../models/mappings.js';
-import PatternRow from '../models/pattern-row.js';
-import ChannelRow from '../models/channel-row.js';
+import Module from '$lib/models/module.js';
+import Pattern from '$lib/models/pattern.js';
+import toModuleNote from '$lib/models/mappings.js';
+import PatternRow from '$lib/models/pattern-row.js';
+import ChannelRow from '$lib/models/channel-row.js';
 
 type VortexMetaData = {
 	VortexTrackerII: string;

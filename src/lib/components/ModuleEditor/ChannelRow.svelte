@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Cell from './Cell.svelte';
-	import type ChannelRow from '../../models/channel-row';
+	import type ChannelRow from '$lib/models/channel-row';
 
 	export let row: ChannelRow;
 	export let className = '';

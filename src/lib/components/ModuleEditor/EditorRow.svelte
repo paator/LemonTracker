@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { currentPattern, cursorPosition } from '../../stores/stores.js';
+	import { currentPattern, cursorPosition } from '$lib/stores/stores.js';
 	import Cell from './Cell.svelte';
 	import CellGroup from './CellGroup.svelte';
 	import ChannelRow from './ChannelRow.svelte';
 	import RowContainer from './RowContainer.svelte';
 	import Border from './Border.svelte';
-	import type PatternRow from '../../models/pattern-row';
+	import type PatternRow from '$lib/models/pattern-row.js';
 
 	export let row: PatternRow;
 	export let index: number;
