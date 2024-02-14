@@ -35,7 +35,7 @@
 	}
 </script>
 
-<div class="flex flex-col gap-4 min-h-0">
+<div class="flex flex-col gap-2 min-h-0">
 	<EditorMenu>
 		<EditorButton on:click={newModule}>New Track</EditorButton>
 		<EditorButton on:click={loadModule}>Load Module</EditorButton>

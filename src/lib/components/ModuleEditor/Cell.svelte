@@ -21,12 +21,13 @@
 	$: displayValue = isValueOrDefault ? defaultDisplayValue : str;
 </script>
 
-<span
-	on:click={cursorToCellPosition}
-	class:text-slate-500={isValueOrDefault}
-	class:bg-blue-50={isPositionMatched}
-	class:text-black={isPositionMatched}
-	class:animate-[pulse_1.2s_linear_infinite]={isPositionMatched}
->
-	{displayValue}
+<span on:click={cursorToCellPosition}>
+	<span
+		class="px-[0.5px]"
+		class:text-slate-500={isValueOrDefault}
+		class:bg-blue-50={isPositionMatched}
+		class:text-black={isPositionMatched}
+	>
+		{displayValue}
+	</span>
 </span>
