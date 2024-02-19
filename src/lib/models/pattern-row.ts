@@ -1,4 +1,11 @@
+import Channel from './channel';
+
 export default class PatternRow {
-	envelopeValue = 0;
-	noiseValue = 0;
+	envelopeValue = '....';
+	noiseValue = '..';
+	channels: Channel[];
+
+	constructor(channels: Channel[] = [new Channel(), new Channel(), new Channel()]) {
+		this.channels = channels;
+	}
 }

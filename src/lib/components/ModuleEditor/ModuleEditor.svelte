@@ -6,7 +6,7 @@
 		moduleTitle,
 		patterns
 	} from '$lib/stores/stores.js';
-	import PatternEditor from './PatternEditor.svelte';
+	import PatternEditor from '$lib/components/PatternEditor/PatternEditor.svelte';
 
 	function switchPattern(index: number) {
 		currentPatternIndex.set(index);
@@ -15,7 +15,7 @@
 </script>
 
 <div
-	class="w-full min-h-0 self-center rounded-xl bg-slate-600 px-4 shadow-slate-900 drop-shadow-md max-w-[1080px] flex flex-col"
+	class="w-full min-h-0 self-center rounded-xl bg-slate-600 px-3 shadow-slate-900 drop-shadow-md max-w-[1080px] flex flex-col"
 >
 	<div class="flex gap-4 py-2 font-mono text-xs text-slate-900">
 		<div class="grow">

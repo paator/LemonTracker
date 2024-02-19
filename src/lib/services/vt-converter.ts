@@ -144,18 +144,6 @@ export default class VortexModuleConverter {
 				const rowValues = patternLine.split('|');
 				const patternRow = this.createPatternRow(rowValues);
 				patterns[i].patternRows.push(patternRow);
-
-				// Channel A
-				let trimmedRowData = rowValues[2].replace(/\s+/, '');
-				patterns[i].channels[0].channelRows.push(this.mapRowData(trimmedRowData));
-
-				// Channel B
-				trimmedRowData = rowValues[3].replace(/\s+/, '');
-				patterns[i].channels[1].channelRows.push(this.mapRowData(trimmedRowData));
-
-				// Channel C
-				trimmedRowData = rowValues[4].replace(/\s+/, '');
-				patterns[i].channels[2].channelRows.push(this.mapRowData(trimmedRowData));
 			}
 
 			i++;
@@ -167,13 +155,23 @@ export default class VortexModuleConverter {
 	createPatternRow(rowValues: string[]) {
 		const patternRow = new PatternRow();
 
-		let envelopeValue = parseInt(rowValues[0].replace(/\./g, ''), 16);
-		if (isNaN(envelopeValue)) envelopeValue = 0;
+		let envelopeValue = rowValues[0];
 		patternRow.envelopeValue = envelopeValue;
 
-		let noiseValue = parseInt(rowValues[1].replace(/\./g, ''), 16);
-		if (isNaN(noiseValue)) noiseValue = 0;
+		let noiseValue = rowValues[1];
 		patternRow.noiseValue = noiseValue;
+
+		// Channel A
+		let trimmedRowData = rowValues[2].replace(/\s+/, '');
+		patternRow.channels[0].channelRows.push(this.mapRowData(trimmedRowData));
+
+		// Channel B
+		trimmedRowData = rowValues[3].replace(/\s+/, '');
+		patternRow.channels[1].channelRows.push(this.mapRowData(trimmedRowData));
+
+		// Channel C
+		trimmedRowData = rowValues[4].replace(/\s+/, '');
+		patternRow.channels[2].channelRows.push(this.mapRowData(trimmedRowData));
 
 		return patternRow;
 	}
@@ -181,14 +179,14 @@ export default class VortexModuleConverter {
 	mapRowData(trimmedRowData: string) {
 		const row = new ChannelRow();
 		row.noteData = toModuleNote(trimmedRowData.slice(0, 3));
-		row.instrument = parseInt(trimmedRowData[3], 16) || 0;
-		row.envelope = parseInt(trimmedRowData[4], 16) || 0;
-		row.ornament = parseInt(trimmedRowData[5], 16) || 0;
-		row.volume = parseInt(trimmedRowData[6], 16) || 0;
-		row.effect = parseInt(trimmedRowData[8], 16) || 0;
-		row.effectParamX = parseInt(trimmedRowData[9], 16) || 0;
-		row.effectParamY = parseInt(trimmedRowData[10], 16) || 0;
-		row.effectParamZ = parseInt(trimmedRowData[11], 16) || 0;
+		row.instrument = trimmedRowData[3];
+		row.envelope = trimmedRowData[4];
+		row.ornament = trimmedRowData[5];
+		row.volume = trimmedRowData[6];
+		row.effect = trimmedRowData[8];
+		row.effectParamX = trimmedRowData[9];
+		row.effectParamY = trimmedRowData[10];
+		row.effectParamZ = trimmedRowData[11];
 		return row;
 	}
 
