@@ -7,10 +7,42 @@
 		patterns,
 		currentPatternIndex
 	} from '$lib/stores/stores.js';
+	import type PatternRow from '$lib/models/pattern-row';
+
+	interface VisibleRow {
+		row: PatternRow;
+		index: number;
+		isFromGhostPattern: boolean;
+	}
+
+	let container: HTMLElement;
+	let visibleRows: VisibleRow[] = [];
+	const editorRowHeight = 24;
+	const buffer = 1;
+
+	$: calculateVisibleRows($cursorPosition.posY);
 
 	onMount(() => {
 		cursorPosition.setPosition(0, 0);
+		calculateVisibleRows(0);
 	});
+
+	function calculateVisibleRows(cursorPositionY: number) {
+		const possibleVisibleRowsCount = Math.floor(container?.clientHeight / editorRowHeight);
+		const halfVisibleRows = Math.floor(possibleVisibleRowsCount / 2) + buffer;
+
+		let startRow = Math.max(cursorPositionY - halfVisibleRows, 0);
+		let endRow = Math.min(
+			cursorPositionY + halfVisibleRows,
+			$currentPattern.patternRows.length - 1
+		);
+
+		visibleRows = $currentPattern.patternRows.slice(startRow, endRow + 1).map((row, index) => ({
+			row,
+			index: startRow + index,
+			isFromGhostPattern: false
+		}));
+	}
 
 	function updateCursorPosition(deltaY: number) {
 		if (deltaY < 0) {
@@ -23,58 +55,45 @@
 			} else {
 				cursorPosition.decrementYBy(1);
 			}
+		} else if (
+			$cursorPosition.posY + 1 >= $currentPattern.patternRows.length &&
+			$currentPatternIndex < $patterns.length - 1
+		) {
+			$currentPatternIndex++;
+			cursorPosition.setPosition($cursorPosition.posX, 0);
 		} else {
-			if (
-				$cursorPosition.posY + 1 >= $currentPattern.patternRows.length &&
-				$currentPatternIndex < $patterns.length - 1
-			) {
-				$currentPatternIndex++;
-				cursorPosition.setPosition($cursorPosition.posX, 0);
-			} else {
-				cursorPosition.incrementYBy(1);
-			}
+			cursorPosition.incrementYBy(1);
 		}
 	}
 
 	function handleWheel(event: WheelEvent) {
-		updateCursorPosition(event.deltaY);
+		updateCursorPosition(Math.sign(event.deltaY));
 	}
 
 	function handleKeyDown(event: KeyboardEvent) {
-		switch (event.key) {
-			case 'ArrowUp':
-				updateCursorPosition(-1);
-				break;
-			case 'ArrowDown':
-				updateCursorPosition(1);
-				break;
+		if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+			updateCursorPosition(event.key === 'ArrowUp' ? -1 : 1);
 		}
 	}
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <div
+	bind:this={container}
 	on:wheel={handleWheel}
 	on:keydown={handleKeyDown}
 	tabindex="0"
 	class="overflow-y-hidden h-screen select-none mx-auto bg-slate-800 drop-shadow-md font-mono
 	text-slate-600 text-md text-center focus:border-2 focus:border-blue-500 outline-none"
 >
-	{#if $currentPatternIndex > 0}
-		{#each $patterns[$currentPatternIndex - 1].patternRows as row, i}
-			<EditorRow {row} index={i} class="opacity-15" />
-		{/each}
-	{/if}
-	{#each $currentPattern.patternRows as row, i}
+	{#each visibleRows as { row, index } (index)}
 		<EditorRow
 			{row}
-			index={i}
-			class="{i % 4 === 0 && $cursorPosition.posY !== i ? 'bg-slate-400/10' : ''}
-				{$cursorPosition.posY === i ? 'bg-blue-800 text-slate-300' : ''}"
+			{index}
+			class="{index % 4 === 0 && $cursorPosition.posY !== index
+				? 'bg-slate-400/10'
+				: ''} {$cursorPosition.posY === index ? 'bg-blue-800 text-slate-300' : ''}"
 		/>
 	{/each}
-	{#if $currentPatternIndex < $patterns.length - 1}
-		{#each $patterns[$currentPatternIndex + 1].patternRows as row, i}
-			<EditorRow {row} index={i} class="opacity-15" />
-		{/each}
-	{/if}
 </div>
