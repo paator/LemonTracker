@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { listen } from '@tauri-apps/api/event';
 	import EditorButton from '$lib/components/EditorMenu/EditorButton.svelte';
 	import EditorMenu from '$lib/components/EditorMenu/EditorMenu.svelte';
 	import Module from '$lib/models/module';
@@ -7,6 +9,21 @@
 	import ModuleEditor from '$lib/components/ModuleEditor/ModuleEditor.svelte';
 
 	let fileLoaderInput: HTMLInputElement;
+
+	onMount(() => {
+		const eventHandlers: Record<string, () => void> = {
+			'new': newModule,
+			'open': loadModule,
+		};
+
+		listen('menu', (event) => {
+			const payload = event.payload as keyof typeof eventHandlers;
+			const handler = eventHandlers[payload];
+			if (handler) {
+				handler();
+			}
+		});
+	});
 
 	function newModule() {
 		setCurrentModule(new Module());
