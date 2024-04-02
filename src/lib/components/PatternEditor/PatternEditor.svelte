@@ -87,13 +87,15 @@
 	class="overflow-y-hidden h-screen select-none mx-auto bg-slate-800 drop-shadow-md font-mono
 	text-slate-600 text-md text-center focus:border-2 focus:border-blue-500 outline-none"
 >
-	{#each visibleRows as { row, index } (index)}
-		<EditorRow
-			{row}
-			{index}
-			class="{index % 4 === 0 && $cursorPosition.posY !== index
-				? 'bg-slate-400/10'
-				: ''} {$cursorPosition.posY === index ? 'bg-blue-800 text-slate-300' : ''}"
-		/>
-	{/each}
+	<div>
+		{#each visibleRows as { row, index } (index)}
+			<EditorRow
+				{row}
+				{index}
+				class="{index % 4 === 0 && $cursorPosition.posY !== index
+					? 'bg-slate-400/10'
+					: ''} {$cursorPosition.posY === index ? 'bg-blue-800 text-slate-300' : ''}"
+			/>
+		{/each}
+	</div>
 </div>

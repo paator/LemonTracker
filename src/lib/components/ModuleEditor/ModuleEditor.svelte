@@ -36,7 +36,7 @@
 		</div>
 	</div>
 	<div
-		class="flex flex-shrink-0 overflow-auto text-center font-mono text-md shadow-slate-900 gap-[2px] select-none"
+		class="mb-1 flex flex-shrink-0 overflow-auto text-center font-mono text-md shadow-slate-900 gap-[2px] select-none"
 	>
 		{#each $patterns as pattern, i (i)}
 			<button

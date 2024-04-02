@@ -12,8 +12,8 @@
 
 	onMount(() => {
 		const eventHandlers: Record<string, () => void> = {
-			'new': newModule,
-			'open': loadModule,
+			new: newModule,
+			open: loadModule
 		};
 
 		listen('menu', (event) => {

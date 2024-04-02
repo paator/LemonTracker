@@ -20,6 +20,7 @@ export function setCurrentModule(module: Module) {
 	moduleAuthor.set(module.author);
 	moduleInitSpeed.set(module.initSpeed);
 	patterns.set(module.patterns);
+	cursorPosition.setPosition(0, 0);
 }
 export type CursorPosition = {
 	posX: number;
