@@ -3,7 +3,7 @@
 	import { Note } from '$lib/models/note-data';
 
 	export let row: PatternRow;
-	export let index: number;
+	export let index: number = 0;
 
 	$: hexIndex = index.toString(16).padStart(2, '0').toUpperCase();
 	$: classesBase = `${$$props.class ?? ''}`;
