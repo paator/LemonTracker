@@ -1,6 +1,7 @@
-import { derived, get, writable } from 'svelte/store';
+import { derived, get, writable, type Readable } from 'svelte/store';
 import Pattern from '$lib/models/pattern';
 import type Module from '$lib/models/module';
+import type VisibleRow from '$lib/models/visible-row';
 
 export const moduleTitle = writable('');
 export const moduleAuthor = writable('');
@@ -11,10 +12,28 @@ export const currentPattern = derived(
 	[currentPatternIndex, patterns],
 	([$currentPatternIndex, $patterns]) => $patterns[$currentPatternIndex]
 );
+
 export const currentPatternLength = derived(
 	currentPattern,
 	($currentPattern) => $currentPattern.length
 );
+
+export const allPatternRows = derived(patterns, ($patterns): VisibleRow[] => {
+	let currentIndex = 0;
+
+	return $patterns
+		.map((pattern) =>
+			pattern.patternRows.map((row, rowIndex) => ({
+				row: row,
+				globalIndex: currentIndex++,
+				patternIndex: rowIndex,
+				isPlaceholder: false,
+				ownerPattern: pattern
+			}))
+		)
+		.flat();
+});
+
 export function setCurrentModule(module: Module) {
 	moduleTitle.set(module.title);
 	moduleAuthor.set(module.author);
@@ -22,10 +41,12 @@ export function setCurrentModule(module: Module) {
 	patterns.set(module.patterns);
 	cursorPosition.setPosition(0, 0);
 }
+
 export type CursorPosition = {
 	posX: number;
 	posY: number;
 };
+
 function createCursorPosition() {
 	const initialState: CursorPosition = {
 		posX: 0,
@@ -78,3 +99,15 @@ function createCursorPosition() {
 }
 
 export const cursorPosition = createCursorPosition();
+
+export const globalCursorPosY = derived(
+	[cursorPosition, patterns, currentPatternIndex],
+	([$cursorPosition, $patterns, $currentPatternIndex]) => {
+		let lengthBeforeCurrent = 0;
+		for (let i = 0; i < $currentPatternIndex; i++) {
+			lengthBeforeCurrent += $patterns[i].patternRows.length;
+		}
+
+		return lengthBeforeCurrent + $cursorPosition.posY;
+	}
+);

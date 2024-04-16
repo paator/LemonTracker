@@ -5,72 +5,66 @@
 		cursorPosition,
 		currentPattern,
 		patterns,
-		currentPatternIndex
+		currentPatternIndex,
+		allPatternRows,
+		globalCursorPosY
 	} from '$lib/stores/stores.js';
 	import PatternRow from '$lib/models/pattern-row';
 	import PlaceholderRow from './PlaceholderRow.svelte';
+	import type VisibleRow from '$lib/models/visible-row';
 
-	interface VisibleRow {
-		row: PatternRow;
-		index: number;
-		isPlaceholder: boolean;
-	}
-
+	let buffer = 1;
 	let container: HTMLElement;
 	let visibleRows: VisibleRow[] = [];
+	let resizeObserver: ResizeObserver;
 
 	const editorRowHeight = 24;
 
-	$: calculateVisibleRows($cursorPosition.posY);
+	$: calculateVisibleRows($globalCursorPosY);
 
 	onMount(() => {
-		cursorPosition.setPosition(0, 0);
-		calculateVisibleRows(0);
-
-		const resizeObserver = new ResizeObserver(() => {
-			calculateVisibleRows($cursorPosition.posY);
+		resizeObserver = new ResizeObserver(() => {
+			calculateVisibleRows($globalCursorPosY);
 		});
 
 		resizeObserver.observe(container);
 
-		onDestroy(() => {
-			resizeObserver.disconnect();
-		});
+		cursorPosition.setPosition(0, 0);
+		calculateVisibleRows(0);
+	});
+
+	onDestroy(() => {
+		resizeObserver.disconnect();
 	});
 
 	function calculateVisibleRows(cursorPositionY: number) {
-		const possibleVisibleRowsCount = Math.floor(container?.clientHeight / editorRowHeight);
-		const totalRows = $currentPattern.patternRows.length;
+		const possibleVisibleRowsCount =
+			Math.floor(container?.clientHeight / editorRowHeight) + buffer;
+		const totalRowsLength = $allPatternRows.length;
 		const halfVisibleRows = Math.floor(possibleVisibleRowsCount / 2);
 
 		let startRow = Math.max(cursorPositionY - halfVisibleRows, 0);
-		let endRow = Math.min(cursorPositionY + halfVisibleRows, totalRows - 1);
+		let endRow = Math.min(cursorPositionY + halfVisibleRows, totalRowsLength - 1);
 
 		let ghostRowsAtStart = Math.max(halfVisibleRows - cursorPositionY, 0);
-		let ghostRowsAtEnd = Math.max(cursorPositionY + halfVisibleRows - (totalRows - 1), 0);
+		let ghostRowsAtEnd = Math.max(cursorPositionY + halfVisibleRows - (totalRowsLength - 1), 0);
 
 		visibleRows = [];
 		for (let i = 0; i < ghostRowsAtStart; i++) {
-			visibleRows.push(createGhostRow(i - ghostRowsAtStart));
+			visibleRows.push(createPlaceholderRow(i - ghostRowsAtStart));
 		}
 
-		visibleRows.push(
-			...$currentPattern.patternRows.slice(startRow, endRow + 1).map((row, index) => ({
-				row,
-				index: startRow + index,
-				isPlaceholder: false
-			}))
-		);
+		visibleRows.push(...$allPatternRows.slice(startRow, endRow + 1));
 
 		for (let i = 0; i < ghostRowsAtEnd; i++) {
-			visibleRows.push(createGhostRow(totalRows + i));
+			visibleRows.push(createPlaceholderRow(totalRowsLength + i));
 		}
 	}
 
-	function createGhostRow(index: number): VisibleRow {
+	function createPlaceholderRow(index: number): VisibleRow {
 		return {
 			row: new PatternRow(),
-			index,
+			globalIndex: Math.random() * 10000,
 			isPlaceholder: true
 		};
 	}
@@ -108,11 +102,8 @@
 	}
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <div
 	bind:this={container}
-	on:resize={() => calculateVisibleRows($cursorPosition.posY)}
 	on:wheel={handleWheel}
 	on:keydown={handleKeyDown}
 	tabindex="0"
@@ -120,16 +111,21 @@
 	text-slate-600 text-md text-center focus:border-2 focus:border-blue-500 outline-none"
 >
 	<div>
-		{#each visibleRows as { row, index, isPlaceholder } (index)}
+		{#each visibleRows as { row, patternIndex, globalIndex, isPlaceholder, ownerPattern } (globalIndex)}
 			{#if isPlaceholder}
 				<PlaceholderRow />
 			{:else}
 				<EditorRow
 					{row}
-					{index}
-					class="{index % 4 === 0 && $cursorPosition.posY !== index
+					index={patternIndex}
+					class="{patternIndex !== undefined &&
+					patternIndex % 4 === 0 &&
+					$cursorPosition.posY !== patternIndex
 						? 'bg-slate-400/10'
-						: ''} {$cursorPosition.posY === index ? 'bg-blue-800 text-slate-300' : ''}"
+						: ''} {$cursorPosition.posY === patternIndex &&
+					ownerPattern === $currentPattern
+						? 'bg-blue-800 text-slate-300'
+						: ''} {ownerPattern === $currentPattern ? '' : 'opacity-10'}"
 				/>
 			{/if}
 		{/each}

@@ -1,22 +1,23 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { listen } from '@tauri-apps/api/event';
+	import { onDestroy, onMount } from 'svelte';
+	import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 	import EditorButton from '$lib/components/EditorMenu/EditorButton.svelte';
 	import EditorMenu from '$lib/components/EditorMenu/EditorMenu.svelte';
 	import Module from '$lib/models/module';
 	import VortexModuleConverter from '$lib/services/vt-converter';
-	import { currentPatternIndex, setCurrentModule } from '$lib/stores/stores.js';
+	import { currentPatternIndex, cursorPosition, setCurrentModule } from '$lib/stores/stores.js';
 	import ModuleEditor from '$lib/components/ModuleEditor/ModuleEditor.svelte';
 
 	let fileLoaderInput: HTMLInputElement;
+	let unlisten: UnlistenFn;
 
-	onMount(() => {
+	onMount(async () => {
 		const eventHandlers: Record<string, () => void> = {
 			new: newModule,
 			open: loadModule
 		};
 
-		listen('menu', (event) => {
+		unlisten = await listen<string>('menu', (event) => {
 			const payload = event.payload as keyof typeof eventHandlers;
 			const handler = eventHandlers[payload];
 			if (handler) {
@@ -24,6 +25,8 @@
 			}
 		});
 	});
+
+	onDestroy(() => unlisten());
 
 	function newModule() {
 		setCurrentModule(new Module());
@@ -49,6 +52,7 @@
 
 		setCurrentModule(lemonModule);
 		currentPatternIndex.set(0);
+		cursorPosition.setPosition(0, 0);
 	}
 </script>
 

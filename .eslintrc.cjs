@@ -29,6 +29,6 @@ module.exports = {
 	],
 	rules: {
 		'@typescript-eslint/no-unused-vars': [1, { argsIgnorePattern: '^_' }],
-		'no-constant-condition': ['error', { 'checkLoops': false }]
+		'no-constant-condition': ['error', { checkLoops: false }]
 	}
 };

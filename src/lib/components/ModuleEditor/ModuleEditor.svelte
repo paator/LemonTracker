@@ -22,7 +22,7 @@
 			<span class="text-slate-400">Title:</span>
 			<input
 				type="text"
-				class="mt-1 block w-full rounded-md bg-white px-2 text-sm shadow-sm"
+				class="mt-1 block w-full rounded-md bg-white px-2 shadow-sm"
 				bind:value={$moduleTitle}
 			/>
 		</div>
@@ -30,7 +30,7 @@
 			<span class="text-slate-400">Author:</span>
 			<input
 				type="text"
-				class="mt-1 block w-full rounded-md bg-white px-2 text-sm shadow-sm"
+				class="mt-1 block w-full rounded-md bg-white px-2 shadow-sm"
 				bind:value={$moduleAuthor}
 			/>
 		</div>
