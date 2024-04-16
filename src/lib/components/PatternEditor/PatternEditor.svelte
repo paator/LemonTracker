@@ -62,9 +62,11 @@
 	}
 
 	function createPlaceholderRow(index: number): VisibleRow {
+		//placeholders need to have constant global index value, but these values should be impossible to reach
+		//within normal usage. they are primarily used as key in svelte's for each loop. without this they would be recreated all the time
 		return {
 			row: new PatternRow(),
-			globalIndex: Math.random() * 10000,
+			globalIndex: 0x999999 - index,
 			isPlaceholder: true
 		};
 	}
