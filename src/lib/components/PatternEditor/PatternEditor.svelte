@@ -20,7 +20,9 @@
 
 	const editorRowHeight = 24;
 
-	$: calculateVisibleRows($globalCursorPosY);
+	$: if ($patterns) {
+		calculateVisibleRows($globalCursorPosY);
+	}
 
 	onMount(() => {
 		resizeObserver = new ResizeObserver(() => {
@@ -29,7 +31,6 @@
 
 		resizeObserver.observe(container);
 
-		cursorPosition.setPosition(0, 0);
 		calculateVisibleRows(0);
 	});
 
