@@ -48,53 +48,20 @@ export type CursorPosition = {
 };
 
 function createCursorPosition() {
-	const initialState: CursorPosition = {
-		posX: 0,
-		posY: 0
-	};
+	const initialState: CursorPosition = { posX: 0, posY: 0 };
 	const { subscribe, update, set } = writable(initialState);
+
+	function adjustPosition(prop: 'posX' | 'posY', value: number) {
+		update((state) => ({ ...state, [prop]: state[prop] + value }));
+	}
+
 	return {
-		setPosition: function (x: number, y: number) {
-			set({ posX: x, posY: y });
-		},
 		subscribe,
-		incrementXBy: function (value: number) {
-			update((oldPosition) => {
-				if (oldPosition.posX + value > 32) {
-					return { ...oldPosition, posX: oldPosition.posX };
-				} else {
-					return { ...oldPosition, pos: oldPosition.posX + value };
-				}
-			});
-		},
-		decrementXBy: function (value: number) {
-			update((oldPosition) => {
-				if (oldPosition.posX - value < 0) {
-					return { ...oldPosition, posx: 0 };
-				} else {
-					return { ...oldPosition, pos: oldPosition.posX - value };
-				}
-			});
-		},
-		incrementYBy: function (value: number) {
-			update((oldPosition) => {
-				//TODO: should I get rid of get() for performance reasons?
-				if (oldPosition.posY + value > get(currentPatternLength) - 1) {
-					return { ...oldPosition, posY: oldPosition.posY };
-				} else {
-					return { ...oldPosition, posY: oldPosition.posY + value };
-				}
-			});
-		},
-		decrementYBy: function (value: number) {
-			update((oldPosition) => {
-				if (oldPosition.posY - value < 0) {
-					return { ...oldPosition, posY: 0 };
-				} else {
-					return { ...oldPosition, posY: oldPosition.posY - value };
-				}
-			});
-		}
+		setPosition: (x: number, y: number) => set({ posX: x, posY: y }),
+		incrementXBy: (value: number) => adjustPosition('posX', value),
+		decrementXBy: (value: number) => adjustPosition('posX', -value),
+		incrementYBy: (value: number) => adjustPosition('posY', value),
+		decrementYBy: (value: number) => adjustPosition('posY', -value)
 	};
 }
 

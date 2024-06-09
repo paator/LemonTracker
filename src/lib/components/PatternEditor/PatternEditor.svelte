@@ -72,14 +72,16 @@
 		};
 	}
 
-	function updateCursorPosition(deltaY: number) {
+	function updateCursorPositionY(deltaY: number) {
 		if (deltaY < 0) {
 			if ($cursorPosition.posY - 1 < 0 && $currentPatternIndex > 0) {
 				$currentPatternIndex--;
 				cursorPosition.setPosition(
 					$cursorPosition.posX,
-					$patterns[$currentPatternIndex].patternRows.length - 1
+					$currentPattern.patternRows.length - 1
 				);
+			} else if ($cursorPosition.posY - 1 < 0 && $currentPatternIndex === 0) {
+				return;
 			} else {
 				cursorPosition.decrementYBy(1);
 			}
@@ -89,18 +91,41 @@
 		) {
 			$currentPatternIndex++;
 			cursorPosition.setPosition($cursorPosition.posX, 0);
+		} else if (
+			$cursorPosition.posY + 1 >= $currentPattern.patternRows.length &&
+			$currentPatternIndex >= $patterns.length - 1
+		) {
+			return;
 		} else {
 			cursorPosition.incrementYBy(1);
 		}
 	}
 
+	function updateCursorPositionX(deltaX: number) {
+		if (deltaX < 0) {
+			if ($cursorPosition.posX - 1 < 0) {
+				return;
+			} else {
+				cursorPosition.decrementXBy(1);
+			}
+		} else {
+			if ($cursorPosition.posX + 1 > 5) {
+				return;
+			} else {
+				cursorPosition.incrementXBy(1);
+			}
+		}
+	}
+
 	function handleWheel(event: WheelEvent) {
-		updateCursorPosition(Math.sign(event.deltaY));
+		updateCursorPositionY(Math.sign(event.deltaY));
 	}
 
 	function handleKeyDown(event: KeyboardEvent) {
 		if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-			updateCursorPosition(event.key === 'ArrowUp' ? -1 : 1);
+			updateCursorPositionY(event.key === 'ArrowUp' ? -1 : 1);
+		} else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+			updateCursorPositionX(event.key === 'ArrowLeft' ? -1 : 1);
 		}
 	}
 </script>
@@ -111,7 +136,7 @@
 	on:keydown={handleKeyDown}
 	tabindex="0"
 	class="overflow-y-hidden h-screen select-none mx-auto bg-slate-800 drop-shadow-md font-mono
-	text-slate-600 text-md text-center focus:border-2 focus:border-blue-500 outline-none"
+	text-slate-600 text-md text-center pattern-editor"
 >
 	<div>
 		{#each visibleRows as { row, patternIndex, globalIndex, isPlaceholder, ownerPattern } (globalIndex)}
@@ -120,6 +145,7 @@
 			{:else}
 				<EditorRow
 					{row}
+					{globalIndex}
 					index={patternIndex}
 					class="{patternIndex !== undefined &&
 					patternIndex % 4 === 0 &&
@@ -134,3 +160,11 @@
 		{/each}
 	</div>
 </div>
+
+<style>
+	.pattern-editor:focus {
+		-webkit-box-shadow: inset 0px 0px 0px 2px theme(colors.blue.800);
+		-moz-box-shadow: inset 0px 0px 0px 2px theme(colors.blue.800);
+		box-shadow: inset 0px 0px 0px 2px theme(colors.blue.800);
+	}
+</style>

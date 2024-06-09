@@ -1,16 +1,14 @@
 <script lang="ts">
 	import type PatternRow from '$lib/models/pattern-row.js';
 	import { Note } from '$lib/models/note-data';
+	import CellGroup from '../CellGroup.svelte';
 
 	export let row: PatternRow;
 	export let index: number = 0;
+	export let globalIndex: number = 0;
 
 	$: hexIndex = index.toString(16).padStart(2, '0').toUpperCase();
 	$: classesBase = `${$$props.class ?? ''}`;
-
-	function textColorBasedOnCondition(condition: boolean, trueClass: string, falseClass = '') {
-		return condition ? trueClass : falseClass;
-	}
 
 	function isCharVisible(char: string) {
 		return char !== '.';
@@ -18,54 +16,67 @@
 </script>
 
 <div class="flex relative {classesBase}">
-	<span
-		class="px-2 {textColorBasedOnCondition(index % 4 === 0, 'text-blue-200', 'text-blue-300')}"
-	>
-		{hexIndex}
-	</span>
+	<CellGroup
+		coordinates={{ startingXPosition: 0, yPosition: globalIndex }}
+		class="px-2"
+		condition={(_hexValue) => index % 4 === 0}
+		trueClass="text-blue-200"
+		falseClass="text-blue-300"
+		values={hexIndex}
+	/>
 	<div class="px-2 flex gap-[0.5px] border-l border-slate-600">
-		{#each row.envelopeValue.split('') as cell}
-			<span class={textColorBasedOnCondition(isCharVisible(cell), 'text-cyan-400')}>
-				{cell}
-			</span>
-		{/each}
+		<CellGroup
+			condition={(envChar) => isCharVisible(envChar)}
+			trueClass="text-cyan-400"
+			coordinates={{ startingXPosition: 4, yPosition: globalIndex }}
+			values={row.envelopeValue.split('')}
+		/>
 	</div>
 	<div class="px-2 flex gap-[0.5px] border-l border-slate-600">
-		{#each row.noiseValue.split('') as cell}
-			<span class={textColorBasedOnCondition(isCharVisible(cell), 'text-cyan-400')}>
-				{cell}
-			</span>
-		{/each}
+		<CellGroup
+			condition={(noiseChar) => isCharVisible(noiseChar)}
+			trueClass="text-cyan-400"
+			values={row.noiseValue.split('')}
+			coordinates={{ startingXPosition: 6, yPosition: globalIndex }}
+		/>
 	</div>
 
 	{#each row.channels as channel (channel)}
-		{#each channel.channelRows as row (row)}
+		{#each channel.channelRows as channelRow (row)}
 			<div class="px-2 flex border-l border-slate-600">
 				<div class="px-1 flex gap-[0.5px]">
-					<span
-						class={textColorBasedOnCondition(
-							row.noteData.note !== Note.None,
-							'text-blue-100'
-						)}
-					>
-						{row.noteData}
-					</span>
+					<CellGroup
+						values={channelRow.noteData}
+						coordinates={{ startingXPosition: 3, yPosition: globalIndex }}
+						condition={(noteData) => noteData.note !== Note.None}
+						trueClass="text-blue-100"
+					/>
 				</div>
 				<div class="px-1 flex gap-[0.5px]">
-					{#each ['instrument', 'envelope', 'ornament', 'volume'] as prop (prop)}
-						<span class={textColorBasedOnCondition(row[prop] !== '.', 'text-blue-300')}>
-							{row[prop]}
-						</span>
-					{/each}
+					<CellGroup
+						values={[
+							channelRow.instrument,
+							channelRow.envelope,
+							channelRow.ornament,
+							channelRow.volume
+						]}
+						coordinates={{ startingXPosition: 4, yPosition: globalIndex }}
+						condition={(value) => value !== '.'}
+						trueClass="text-blue-300"
+					/>
 				</div>
 				<div class="px-1 flex gap-[0.5px]">
-					{#each ['effect', 'effectParamX', 'effectParamY', 'effectParamZ'] as prop (prop)}
-						<span
-							class={textColorBasedOnCondition(row[prop] !== '.', 'text-yellow-200')}
-						>
-							{row[prop]}
-						</span>
-					{/each}
+					<CellGroup
+						values={[
+							channelRow.effect,
+							channelRow.effectParamX,
+							channelRow.effectParamY,
+							channelRow.effectParamZ
+						]}
+						coordinates={{ startingXPosition: 5, yPosition: globalIndex }}
+						condition={(value) => value !== '.'}
+						trueClass="text-yellow-200"
+					/>
 				</div>
 			</div>
 		{/each}
