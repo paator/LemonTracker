@@ -109,7 +109,7 @@
 				cursorPosition.decrementXBy(1);
 			}
 		} else {
-			if ($cursorPosition.posX + 1 > 5) {
+			if ($cursorPosition.posX + 1 > 32) {
 				return;
 			} else {
 				cursorPosition.incrementXBy(1);
@@ -123,8 +123,10 @@
 
 	function handleKeyDown(event: KeyboardEvent) {
 		if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+			console.log('handling up or down...');
 			updateCursorPositionY(event.key === 'ArrowUp' ? -1 : 1);
 		} else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+			console.log('handling left or right...');
 			updateCursorPositionX(event.key === 'ArrowLeft' ? -1 : 1);
 		}
 	}
@@ -134,9 +136,9 @@
 	bind:this={container}
 	on:wheel={handleWheel}
 	on:keydown={handleKeyDown}
-	tabindex="0"
+	tabindex="-1"
 	class="overflow-y-hidden h-screen select-none mx-auto bg-slate-800 drop-shadow-md font-mono
-	text-slate-600 text-md text-center pattern-editor"
+	text-slate-600 text-md text-center pattern-editor outline-none"
 >
 	<div>
 		{#each visibleRows as { row, patternIndex, globalIndex, isPlaceholder, ownerPattern } (globalIndex)}

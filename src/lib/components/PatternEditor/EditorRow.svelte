@@ -17,18 +17,18 @@
 
 <div class="flex relative {classesBase}">
 	<CellGroup
-		coordinates={{ startingXPosition: 0, yPosition: globalIndex }}
+		coordinates={{ startingXPosition: -1, yPosition: globalIndex }}
 		class="px-2"
 		condition={(_hexValue) => index % 4 === 0}
 		trueClass="text-blue-200"
 		falseClass="text-blue-300"
 		values={hexIndex}
 	/>
-	<div class="px-2 flex gap-[0.5px] border-l border-slate-600">
+	<div class="px-2 flex border-l border-slate-600">
 		<CellGroup
 			condition={(envChar) => isCharVisible(envChar)}
 			trueClass="text-cyan-400"
-			coordinates={{ startingXPosition: 4, yPosition: globalIndex }}
+			coordinates={{ startingXPosition: 0, yPosition: globalIndex }}
 			values={row.envelopeValue.split('')}
 		/>
 	</div>
@@ -37,17 +37,17 @@
 			condition={(noiseChar) => isCharVisible(noiseChar)}
 			trueClass="text-cyan-400"
 			values={row.noiseValue.split('')}
-			coordinates={{ startingXPosition: 6, yPosition: globalIndex }}
+			coordinates={{ startingXPosition: 4, yPosition: globalIndex }}
 		/>
 	</div>
 
-	{#each row.channels as channel (channel)}
+	{#each row.channels as channel, index (channel)}
 		{#each channel.channelRows as channelRow (row)}
 			<div class="px-2 flex border-l border-slate-600">
 				<div class="px-1 flex gap-[0.5px]">
 					<CellGroup
 						values={channelRow.noteData}
-						coordinates={{ startingXPosition: 3, yPosition: globalIndex }}
+						coordinates={{ startingXPosition: 6 + index * 9, yPosition: globalIndex }}
 						condition={(noteData) => noteData.note !== Note.None}
 						trueClass="text-blue-100"
 					/>
@@ -60,7 +60,7 @@
 							channelRow.ornament,
 							channelRow.volume
 						]}
-						coordinates={{ startingXPosition: 4, yPosition: globalIndex }}
+						coordinates={{ startingXPosition: 7 + index * 9, yPosition: globalIndex }}
 						condition={(value) => value !== '.'}
 						trueClass="text-blue-300"
 					/>
@@ -73,7 +73,10 @@
 							channelRow.effectParamY,
 							channelRow.effectParamZ
 						]}
-						coordinates={{ startingXPosition: 5, yPosition: globalIndex }}
+						coordinates={{
+							startingXPosition: 11 + index * 9,
+							yPosition: globalIndex
+						}}
 						condition={(value) => value !== '.'}
 						trueClass="text-yellow-200"
 					/>

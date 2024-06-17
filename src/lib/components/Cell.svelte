@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cursorPosition } from '$lib/stores/stores';
+	import { cursorPosition, globalCursorPosY } from '$lib/stores/stores';
 
 	export let coordinates: { x: number; y: number };
 	export let value: string;
@@ -10,7 +10,7 @@
 	}
 
 	function isCellSelected() {
-		if ($cursorPosition.posX === coordinates.x && $cursorPosition.posY && coordinates.y) {
+		if ($cursorPosition.posX === coordinates.x && $globalCursorPosY === coordinates.y) {
 			return true;
 		}
 
