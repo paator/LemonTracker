@@ -137,7 +137,7 @@
 	on:wheel={handleWheel}
 	on:keydown={handleKeyDown}
 	tabindex="-1"
-	class="overflow-y-hidden h-screen select-none mx-auto bg-slate-800 drop-shadow-md font-mono
+	class="overflow-y-hidden h-screen select-none cursor-default mx-auto bg-slate-800 drop-shadow-md font-mono
 	text-slate-600 text-md text-center pattern-editor outline-none"
 >
 	<div>
