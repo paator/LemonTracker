@@ -9,8 +9,8 @@
 	import PatternEditor from '$lib/components/PatternEditor/PatternEditor.svelte';
 
 	function switchPattern(index: number) {
-		currentPatternIndex.set(index);
-		cursorPosition.setPosition(0, 0);
+		$currentPatternIndex = index;
+		cursorPosition.setPosition($cursorPosition.posX, 0);
 	}
 </script>
 
