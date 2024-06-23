@@ -4,8 +4,8 @@
 	import CellGroup from '../CellGroup.svelte';
 
 	export let row: PatternRow;
-	export let index: number = 0;
-	export let globalIndex: number = 0;
+	export let index = 0;
+	export let globalIndex = 0;
 
 	$: hexIndex = index.toString(16).padStart(2, '0').toUpperCase();
 	$: classesBase = `${$$props.class ?? ''}`;

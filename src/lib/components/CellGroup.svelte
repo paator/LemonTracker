@@ -11,12 +11,14 @@
 	function textColorBasedOnCondition(condition: boolean, trueClass: string, falseClass = '') {
 		return condition ? trueClass : falseClass;
 	}
+
+	let classes = $$props.class ?? '';
 </script>
 
 {#if Array.isArray(values)}
 	{#each values as singleCellValue, index}
 		<span
-			class="{$$props.class} {textColorBasedOnCondition(
+			class="{classes} {textColorBasedOnCondition(
 				condition(singleCellValue),
 				trueClass,
 				falseClass
@@ -29,13 +31,7 @@
 		</span>
 	{/each}
 {:else}
-	<span
-		class="{$$props.class} {textColorBasedOnCondition(
-			condition(values),
-			trueClass,
-			falseClass
-		)}"
-	>
+	<span class="{classes} {textColorBasedOnCondition(condition(values), trueClass, falseClass)}">
 		<Cell
 			value={values.toString()}
 			coordinates={{ x: coordinates.startingXPosition, y: coordinates.yPosition }}

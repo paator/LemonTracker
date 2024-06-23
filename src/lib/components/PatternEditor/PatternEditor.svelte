@@ -39,8 +39,7 @@
 	});
 
 	function calculateVisibleRows(cursorPositionY: number) {
-		const possibleVisibleRowsCount =
-			Math.floor(container?.clientHeight / editorRowHeight) + buffer;
+		const possibleVisibleRowsCount = Math.floor(container?.clientHeight / editorRowHeight) + buffer;
 		const totalRowsLength = $allPatternRows.length;
 		const halfVisibleRows = Math.floor(possibleVisibleRowsCount / 2);
 
@@ -76,10 +75,7 @@
 		if (deltaY < 0) {
 			if ($cursorPosition.posY - 1 < 0 && $currentPatternIndex > 0) {
 				$currentPatternIndex--;
-				cursorPosition.setPosition(
-					$cursorPosition.posX,
-					$currentPattern.patternRows.length - 1
-				);
+				cursorPosition.setPosition($cursorPosition.posX, $currentPattern.patternRows.length - 1);
 			} else if ($cursorPosition.posY - 1 < 0 && $currentPatternIndex === 0) {
 				return;
 			} else {
@@ -132,6 +128,7 @@
 	}
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	bind:this={container}
 	on:wheel={handleWheel}
@@ -153,8 +150,7 @@
 					patternIndex % 4 === 0 &&
 					$cursorPosition.posY !== patternIndex
 						? 'bg-slate-400/10'
-						: ''} {$cursorPosition.posY === patternIndex &&
-					ownerPattern === $currentPattern
+						: ''} {$cursorPosition.posY === patternIndex && ownerPattern === $currentPattern
 						? 'bg-blue-800 text-slate-300'
 						: ''} {ownerPattern === $currentPattern ? '' : 'opacity-10'}"
 				/>

@@ -5,12 +5,12 @@
 	export let value: string;
 	let selected: boolean;
 
-	$: if ($cursorPosition.posX) {
-		selected = isCellSelected();
+	$: {
+		selected = isCellSelected($cursorPosition.posX, $globalCursorPosY);
 	}
 
-	function isCellSelected() {
-		if ($cursorPosition.posX === coordinates.x && $globalCursorPosY === coordinates.y) {
+	function isCellSelected(posX: number, posY: number) {
+		if (posX === coordinates.x && posY === coordinates.y) {
 			return true;
 		}
 
@@ -18,6 +18,6 @@
 	}
 </script>
 
-<span class={selected ? ' bg-cyan-400/40' : ''}>
+<span class={selected ? ' bg-cyan-300/40' : ''}>
 	{value}
 </span>
