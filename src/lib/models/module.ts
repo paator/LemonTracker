@@ -12,7 +12,7 @@ export default class Module {
 		title = '',
 		author = '',
 		initSpeed = 3,
-		patterns: Pattern[] = [new Pattern(undefined, undefined, new Array(64))],
+		patterns: Pattern[] = [new Pattern(undefined, undefined, false)],
 		samples: any[] = [],
 		ornaments: any[] = []
 	) {

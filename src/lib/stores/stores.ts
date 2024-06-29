@@ -78,3 +78,5 @@ export const globalCursorPosY = derived(
 		return lengthBeforeCurrent + $cursorPosition.posY;
 	}
 );
+
+export const currentPatternSelectedRow = derived(cursorPosition, ($cursorPosition) => {});

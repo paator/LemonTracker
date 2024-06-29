@@ -1,0 +1,3 @@
+[submodule "libs/modules/ayumi-js"]
+	path = libs/modules/ayumi-js
+	url = https://github.com/alexanderk23/ayumi-js

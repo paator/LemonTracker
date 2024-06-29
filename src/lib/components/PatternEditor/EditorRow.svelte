@@ -41,47 +41,45 @@
 		/>
 	</div>
 
-	{#each row.channels as channel, index (channel)}
-		{#each channel.channelRows as channelRow (row)}
-			<div class="px-2 flex border-l border-slate-600">
-				<div class="px-1 flex gap-[0.5px]">
-					<CellGroup
-						values={channelRow.noteData}
-						coordinates={{ startingXPosition: 6 + index * 9, yPosition: globalIndex }}
-						condition={(noteData) => noteData.note !== Note.None}
-						trueClass="text-blue-100"
-					/>
-				</div>
-				<div class="px-1 flex gap-[0.5px]">
-					<CellGroup
-						values={[
-							channelRow.instrument,
-							channelRow.envelope,
-							channelRow.ornament,
-							channelRow.volume
-						]}
-						coordinates={{ startingXPosition: 7 + index * 9, yPosition: globalIndex }}
-						condition={(value) => value !== '.'}
-						trueClass="text-blue-300"
-					/>
-				</div>
-				<div class="px-1 flex gap-[0.5px]">
-					<CellGroup
-						values={[
-							channelRow.effect,
-							channelRow.effectParamX,
-							channelRow.effectParamY,
-							channelRow.effectParamZ
-						]}
-						coordinates={{
-							startingXPosition: 11 + index * 9,
-							yPosition: globalIndex
-						}}
-						condition={(value) => value !== '.'}
-						trueClass="text-yellow-200"
-					/>
-				</div>
+	{#each row.channelsData as channelRow, index (channelRow)}
+		<div class="px-2 flex border-l border-slate-600">
+			<div class="px-1 flex gap-[0.5px]">
+				<CellGroup
+					values={channelRow.noteData}
+					coordinates={{ startingXPosition: 6 + index * 9, yPosition: globalIndex }}
+					condition={(noteData) => noteData.note !== Note.None}
+					trueClass="text-blue-100"
+				/>
 			</div>
-		{/each}
+			<div class="px-1 flex gap-[0.5px]">
+				<CellGroup
+					values={[
+						channelRow.instrument,
+						channelRow.envelope,
+						channelRow.ornament,
+						channelRow.volume
+					]}
+					coordinates={{ startingXPosition: 7 + index * 9, yPosition: globalIndex }}
+					condition={(value) => value !== '.'}
+					trueClass="text-blue-300"
+				/>
+			</div>
+			<div class="px-1 flex gap-[0.5px]">
+				<CellGroup
+					values={[
+						channelRow.effect,
+						channelRow.effectParamX,
+						channelRow.effectParamY,
+						channelRow.effectParamZ
+					]}
+					coordinates={{
+						startingXPosition: 11 + index * 9,
+						yPosition: globalIndex
+					}}
+					condition={(value) => value !== '.'}
+					trueClass="text-yellow-200"
+				/>
+			</div>
+		</div>
 	{/each}
 </div>
