@@ -20,9 +20,7 @@
 
 	const editorRowHeight = 24;
 
-	$: if ($patterns) {
-		calculateVisibleRows($globalCursorPosY);
-	}
+	$: calculateVisibleRows($globalCursorPosY);
 
 	onMount(() => {
 		resizeObserver = new ResizeObserver(() => {
@@ -123,10 +121,8 @@
 
 	function handleKeyDown(event: KeyboardEvent) {
 		if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-			console.log('handling up or down...');
 			updateCursorPositionY(event.key === 'ArrowUp' ? -1 : 1);
 		} else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-			console.log('handling left or right...');
 			updateCursorPositionX(event.key === 'ArrowLeft' ? -1 : 1);
 		}
 	}

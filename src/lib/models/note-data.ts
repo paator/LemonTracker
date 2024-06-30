@@ -12,6 +12,33 @@ export default class NoteData {
 			this.note === Note.None || this.note === Note.Off ? '-' : this.octave
 		}`;
 	}
+
+	getNoteValue(): number | null {
+		const noteValues: { [key: string]: number | null } = {
+			'--': null,
+			'C-': 0,
+			'C#': 1,
+			'D-': 2,
+			'D#': 3,
+			'E-': 4,
+			'F-': 5,
+			'F#': 6,
+			'G-': 7,
+			'G#': 8,
+			'A-': 9,
+			'A#': 10,
+			'B-': 11,
+			'R-': null
+		};
+
+		const baseValue = noteValues[this.note];
+
+		if (baseValue === null) {
+			return null;
+		}
+
+		return baseValue + this.octave * 12;
+	}
 }
 
 export enum Note {
