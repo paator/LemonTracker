@@ -37,7 +37,7 @@ export default class NoteData {
 			return null;
 		}
 
-		return baseValue + this.octave * 12;
+		return baseValue + (this.octave - 1) * 12;
 	}
 }
 

@@ -17,7 +17,7 @@
 	import PlayerPlayFilled from '@tabler/icons-svelte/icons/player-play-filled';
 	import { isTrackPlaying } from '$lib/stores/debug';
 	import NoteData, { Note } from '$lib/models/note-data';
-	import { audioContext } from '$lib/stores/audio';
+	import { audioContext, audioNode } from '$lib/stores/audio';
 
 	let fileLoaderInput: HTMLInputElement;
 	let unlisten: UnlistenFn;
@@ -68,6 +68,13 @@
 	}
 
 	async function playOrPauseCurrentPattern() {
+		$isTrackPlaying = !$isTrackPlaying;
+
+		if (!$isTrackPlaying) {
+			$audioContext.suspend();
+			return;
+		}
+
 		$audioContext.resume();
 
 		const PT3ToneTable: number[] = [
@@ -88,16 +95,29 @@
 			return;
 		}
 
-		let noteFreq = PT3ToneTable[0];
-
 		const remainingRows = $allPatternRows.slice(firstRowOfCurrentPattern.globalIndex);
+
+		if (remainingRows.length === 0) {
+			$isTrackPlaying = false;
+			$audioContext.suspend();
+		}
+
 		let speedDecimal = 3;
+		let volume = 15;
+
+		const noteFreqParam = $audioNode.parameters.get('noteFrequency');
+		const volumeParam = $audioNode.parameters.get('volume');
 
 		for (const visibleRow of remainingRows) {
+			if (!$isTrackPlaying) {
+				$audioContext.suspend();
+				break;
+			}
+
 			let speedHex: string | null = null;
+			let volumeHex: string | null = null;
 			let noteData: NoteData = new NoteData(Note.None, 0);
 
-			//assuming C > B > A priority
 			if (visibleRow.row.channelsData[2].effect === 'B') {
 				speedHex = visibleRow.row.channelsData[2].effectParamZ;
 			} else if (visibleRow.row.channelsData[1].effect === 'B') {
@@ -106,16 +126,27 @@
 				speedHex = visibleRow.row.channelsData[0].effectParamZ;
 			}
 
-			if (speedHex !== null) {
+			volumeHex = visibleRow.row.channelsData[0].volume;
+
+			if (speedHex) {
 				speedDecimal = parseInt(speedHex, 16);
+			}
+
+			if (volumeHex) {
+				volume = parseInt(volumeHex, 16);
 			}
 
 			noteData = visibleRow.row.channelsData[0].noteData;
 			const noteIntValue = noteData.getNoteValue();
 
 			if (noteIntValue) {
-				noteFreq = PT3ToneTable[noteIntValue];
+				noteFreqParam?.setValueAtTime(
+					PT3ToneTable[noteIntValue],
+					$audioContext.currentTime
+				);
 			}
+
+			volumeParam?.setValueAtTime(volume, $audioContext.currentTime);
 
 			const delay = speedDecimal * (1.0 / 50) * 1000;
 
@@ -135,13 +166,7 @@
 			} else {
 				cursorPosition.incrementYBy(1);
 			}
-
-			if (!$isTrackPlaying) {
-				break;
-			}
 		}
-
-		$isTrackPlaying = !$isTrackPlaying;
 	}
 </script>
 

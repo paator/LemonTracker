@@ -2,9 +2,7 @@
 	import DebugBar from '$lib/components/Debug/DebugBar.svelte';
 	import { onMount } from 'svelte';
 	import '../app.css';
-	import { audioContext } from '$lib/stores/audio';
-
-	let audioNode: AudioNode;
+	import { audioContext, audioNode } from '$lib/stores/audio';
 
 	onMount(async () => {
 		if (!$audioContext) {
@@ -13,8 +11,10 @@
 				await $audioContext.audioWorklet.addModule('/processor.js');
 			} catch (error) {}
 
-			audioNode = new AudioWorkletNode($audioContext, 'processor');
-			audioNode.connect($audioContext.destination);
+			$audioNode = new AudioWorkletNode($audioContext, 'processor', {
+				outputChannelCount: [2]
+			});
+			$audioNode.connect($audioContext.destination);
 		}
 	});
 </script>
