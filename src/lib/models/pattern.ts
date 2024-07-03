@@ -1,4 +1,3 @@
-import Channel from './channel.js';
 import type PatternRow from './pattern-row.js';
 
 export default class Pattern {

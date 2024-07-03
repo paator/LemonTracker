@@ -163,16 +163,15 @@ export default class VortexModuleConverter {
 
 		// Channel A
 		let trimmedRowData = rowValues[2].replace(/\s+/, '');
-		patternRow.channels[0].channelRows.push(this.mapRowData(trimmedRowData));
+		patternRow.channelsData[0] = this.mapRowData(trimmedRowData);
 
 		// Channel B
 		trimmedRowData = rowValues[3].replace(/\s+/, '');
-		patternRow.channels[1].channelRows.push(this.mapRowData(trimmedRowData));
+		patternRow.channelsData[1] = this.mapRowData(trimmedRowData);
 
 		// Channel C
 		trimmedRowData = rowValues[4].replace(/\s+/, '');
-		patternRow.channels[2].channelRows.push(this.mapRowData(trimmedRowData));
-
+		patternRow.channelsData[2] = this.mapRowData(trimmedRowData);
 		return patternRow;
 	}
 
