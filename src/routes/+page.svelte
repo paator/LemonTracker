@@ -18,6 +18,8 @@
 	import { isTrackPlaying } from '$lib/stores/debug';
 	import NoteData, { Note } from '$lib/models/note-data';
 	import { audioContext, audioNode } from '$lib/stores/audio';
+	import EditorSelect, {type EditorSelectOption} from "$lib/components/EditorMenu/EditorSelect.svelte";
+	import DemoPatorDigitalEspresso from "$lib/demoModules/Pator_Digital_Espresso.vt2?raw";
 
 	let fileLoaderInput: HTMLInputElement;
 	let unlisten: UnlistenFn;
@@ -170,12 +172,46 @@
 			}
 		}
 	}
+
+	//	Demo modules :)
+	type DemoModuleOption = {file: string} & EditorSelectOption;
+	let loadDemoValue: string|undefined;
+	let demoModulesOptions: DemoModuleOption[] = [
+		{value: 'demo-1', label: 'Pator - Digital Espresso', file: DemoPatorDigitalEspresso}
+	];
+
+	$: handleChangeDemoModule(loadDemoValue);
+
+	async function handleChangeDemoModule(value: typeof loadDemoValue){
+
+		const demoModuleOption = demoModulesOptions.find(x => x.value === value);
+		if(!demoModuleOption) return;	//	Bail early.
+
+		const converter = new VortexModuleConverter();
+
+		const lemonModule = await converter.convertToLemonModule(
+			new Blob([demoModuleOption.file], {type: 'text/plain'})
+		);
+
+		setCurrentModule(lemonModule);
+		currentPatternIndex.set(0);
+		cursorPosition.setPosition(0, 0);
+
+	}
+
 </script>
 
 <div class="flex flex-col gap-2 min-h-0">
 	<EditorMenu>
 		<EditorButton on:click={newModule}>New Track</EditorButton>
 		<EditorButton on:click={loadModule}>Load Module</EditorButton>
+		<EditorSelect
+			options={[
+				{value: 'demo-1', label: 'Pator - Digital Espresso'}
+			]}
+			placeholder="Load Demo"
+			bind:value={loadDemoValue}
+		/>
 		<div>
 			<EditorButton on:click={playOrPauseCurrentPattern}>
 				<PlayerPlayFilled size={16} />
