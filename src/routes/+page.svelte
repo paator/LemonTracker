@@ -206,9 +206,7 @@
 		<EditorButton on:click={newModule}>New Track</EditorButton>
 		<EditorButton on:click={loadModule}>Load Module</EditorButton>
 		<EditorSelect
-			options={[
-				{value: 'demo-1', label: 'Pator - Digital Espresso'}
-			]}
+			options={demoModulesOptions}
 			placeholder="Load Demo"
 			bind:value={loadDemoValue}
 		/>
