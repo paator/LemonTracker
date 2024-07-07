@@ -146,7 +146,9 @@
 				);
 			}
 
-			volumeParam?.setValueAtTime(volume, $audioContext.currentTime);
+			if (volume) {
+				volumeParam?.setValueAtTime(volume, $audioContext.currentTime);
+			}
 
 			const delay = speedDecimal * (1.0 / 50) * 1000;
 
