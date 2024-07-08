@@ -73,11 +73,11 @@
 		$isTrackPlaying = !$isTrackPlaying;
 
 		if (!$isTrackPlaying) {
-			$audioContext.suspend();
+			await $audioContext.suspend();
 			return;
 		}
 
-		$audioContext.resume();
+		await $audioContext.resume();
 
 		const PT3ToneTable: number[] = [
 			0x0d10, 0x0c55, 0x0ba4, 0x0afc, 0x0a5f, 0x09ca, 0x093d, 0x08b8, 0x083b, 0x07c5, 0x0755,
@@ -101,7 +101,7 @@
 
 		if (remainingRows.length === 0) {
 			$isTrackPlaying = false;
-			$audioContext.suspend();
+			await $audioContext.suspend();
 		}
 
 		let speedDecimal = 3;
@@ -109,15 +109,16 @@
 
 		const noteFreqParam = $audioNode.parameters.get('noteFrequency');
 		const volumeParam = $audioNode.parameters.get('volume');
+		const noteDelayMs = speedDecimal * (1.0 / 50);
+
+		let isFirstPattern = true;	//	<-- Mark.
+		let noteIndex = 0;
 
 		for(const pattern of $patterns.slice($currentPatternIndex)){
-
-			let isFirstPattern = true;	//	<-- Mark.
-
-			for(const [index, patternRow] of pattern.patternRows.entries()){
+			for(const [rowIndex, patternRow] of pattern.patternRows.entries()){
 
 				//	The first patter should start from cursor position.
-				if(isFirstPattern && index < $cursorPosition.posY){
+				if(isFirstPattern && rowIndex < $cursorPosition.posY){
 					continue;
 				}
 
@@ -133,8 +134,6 @@
 					speedHex = patternRow.channelsData[0].effectParamZ;
 				}
 
-				const delay = speedDecimal * (1.0 / 50) * 1000;
-
 				volumeHex = patternRow.channelsData[0].volume;
 
 				if (speedHex) {
@@ -148,18 +147,19 @@
 
 				noteData = patternRow.channelsData[0].noteData;
 				const noteIntValue = noteData.getNoteValue();
-				console.log($audioContext.currentTime);
 
-				if (noteIntValue) {
-					noteFreqParam?.setValueAtTime(
+				if (noteIntValue && noteFreqParam) {
+					noteFreqParam.setValueAtTime(
 						PT3ToneTable[noteIntValue],
-						index * delay
+						$audioContext.currentTime + noteIndex * noteDelayMs
 					);
 				}
 
-				if(volume) {
-					volumeParam?.setValueAtTime(volume, index * delay);
+				if(volume && volumeParam) {
+					volumeParam.setValueAtTime(volume, $audioContext.currentTime + noteIndex * noteDelayMs);
 				}
+
+				noteIndex++;
 
 			}
 
@@ -168,32 +168,32 @@
 		}
 
 		//	Visuals.
-		//	TODO - maybe not here?
 
-		// for (const visibleRow of remainingRows) {
-		// 	if (!$isTrackPlaying) {
-		// 		$audioContext.suspend();
-		// 		break;
-		// 	}
-		// 	const delay = speedDecimal * (1.0 / 50) * 1000;
-		//
-		// 	await new Promise((resolve) => setTimeout(resolve, delay));
-		//
-		// 	if (
-		// 		$cursorPosition.posY + 1 >= $currentPattern.patternRows.length &&
-		// 		$currentPatternIndex < $patterns.length - 1
-		// 	) {
-		// 		$currentPatternIndex++;
-		// 		cursorPosition.setPosition($cursorPosition.posX, 0);
-		// 	} else if (
-		// 		$cursorPosition.posY + 1 >= $currentPattern.patternRows.length &&
-		// 		$currentPatternIndex >= $patterns.length - 1
-		// 	) {
-		// 		return;
-		// 	} else {
-		// 		cursorPosition.incrementYBy(1);
-		// 	}
-		// }
+		while(true){
+
+			if (!$isTrackPlaying) {
+				await $audioContext.suspend();
+				break;
+			}
+
+			await new Promise((resolve) => setTimeout(resolve, noteDelayMs * 1000));
+
+			if (
+				$cursorPosition.posY + 1 >= $currentPattern.patternRows.length &&
+				$currentPatternIndex < $patterns.length - 1
+			) {
+				$currentPatternIndex++;
+				cursorPosition.setPosition($cursorPosition.posX, 0);
+			} else if (
+				$cursorPosition.posY + 1 >= $currentPattern.patternRows.length &&
+				$currentPatternIndex >= $patterns.length - 1
+			) {
+				break;
+			} else {
+				cursorPosition.incrementYBy(1);
+			}
+
+		}
 
 	}
 
