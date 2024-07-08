@@ -9,7 +9,7 @@
 		allPatternRows,
 		currentPattern,
 		currentPatternIndex,
-		cursorPosition,
+		cursorPosition, globalCursorPosY,
 		patterns,
 		setCurrentModule
 	} from '$lib/stores/stores.js';
@@ -73,11 +73,11 @@
 		$isTrackPlaying = !$isTrackPlaying;
 
 		if (!$isTrackPlaying) {
-			$audioContext.suspend();
+			await $audioContext.suspend();
 			return;
 		}
 
-		$audioContext.resume();
+		await $audioContext.resume();
 
 		const PT3ToneTable: number[] = [
 			0x0d10, 0x0c55, 0x0ba4, 0x0afc, 0x0a5f, 0x09ca, 0x093d, 0x08b8, 0x083b, 0x07c5, 0x0755,
@@ -101,7 +101,7 @@
 
 		if (remainingRows.length === 0) {
 			$isTrackPlaying = false;
-			$audioContext.suspend();
+			await $audioContext.suspend();
 		}
 
 		let speedDecimal = 3;
@@ -109,52 +109,74 @@
 
 		const noteFreqParam = $audioNode.parameters.get('noteFrequency');
 		const volumeParam = $audioNode.parameters.get('volume');
+		const noteDelayMs = speedDecimal * (1.0 / 50);
 
-		for (const visibleRow of remainingRows) {
+		let isFirstPattern = true;	//	<-- Mark.
+		let noteIndex = 0;
+
+		for(const pattern of $patterns.slice($currentPatternIndex)){
+			for(const [rowIndex, patternRow] of pattern.patternRows.entries()){
+
+				//	The first patter should start from cursor position.
+				if(isFirstPattern && rowIndex < $cursorPosition.posY){
+					continue;
+				}
+
+				let speedHex: string | null = null;
+				let volumeHex: string | null = null;
+				let noteData: NoteData = new NoteData(Note.None, 0);
+
+				if (patternRow.channelsData[2].effect === 'B') {
+					speedHex = patternRow.channelsData[2].effectParamZ;
+				} else if (patternRow.channelsData[1].effect === 'B') {
+					speedHex = patternRow.channelsData[1].effectParamZ;
+				} else if (patternRow.channelsData[0].effect === 'B') {
+					speedHex = patternRow.channelsData[0].effectParamZ;
+				}
+
+				volumeHex = patternRow.channelsData[0].volume;
+
+				if (speedHex) {
+					speedDecimal = parseInt(speedHex, 16);
+				}
+
+				if (volumeHex) {
+					volume = parseInt(volumeHex, 16);
+					volume -= 10;	//	TODO - remove - my ears exploded
+				}
+
+				noteData = patternRow.channelsData[0].noteData;
+				const noteIntValue = noteData.getNoteValue();
+
+				if (noteIntValue && noteFreqParam) {
+					noteFreqParam.setValueAtTime(
+						PT3ToneTable[noteIntValue],
+						$audioContext.currentTime + noteIndex * noteDelayMs
+					);
+				}
+
+				if(volume && volumeParam) {
+					volumeParam.setValueAtTime(volume, $audioContext.currentTime + noteIndex * noteDelayMs);
+				}
+
+				noteIndex++;
+
+			}
+
+			if(isFirstPattern) isFirstPattern = false;	//	<--	We are out of the first pattern.
+
+		}
+
+		//	Visuals.
+
+		while(true){
+
 			if (!$isTrackPlaying) {
-				$audioContext.suspend();
+				await $audioContext.suspend();
 				break;
 			}
 
-			let speedHex: string | null = null;
-			let volumeHex: string | null = null;
-			let noteData: NoteData = new NoteData(Note.None, 0);
-
-			if (visibleRow.row.channelsData[2].effect === 'B') {
-				speedHex = visibleRow.row.channelsData[2].effectParamZ;
-			} else if (visibleRow.row.channelsData[1].effect === 'B') {
-				speedHex = visibleRow.row.channelsData[1].effectParamZ;
-			} else if (visibleRow.row.channelsData[0].effect === 'B') {
-				speedHex = visibleRow.row.channelsData[0].effectParamZ;
-			}
-
-			volumeHex = visibleRow.row.channelsData[0].volume;
-
-			if (speedHex) {
-				speedDecimal = parseInt(speedHex, 16);
-			}
-
-			if (volumeHex) {
-				volume = parseInt(volumeHex, 16);
-			}
-
-			noteData = visibleRow.row.channelsData[0].noteData;
-			const noteIntValue = noteData.getNoteValue();
-
-			if (noteIntValue) {
-				noteFreqParam?.setValueAtTime(
-					PT3ToneTable[noteIntValue],
-					$audioContext.currentTime
-				);
-			}
-
-			if (volume) {
-				volumeParam?.setValueAtTime(volume, $audioContext.currentTime);
-			}
-
-			const delay = speedDecimal * (1.0 / 50) * 1000;
-
-			await new Promise((resolve) => setTimeout(resolve, delay));
+			await new Promise((resolve) => setTimeout(resolve, noteDelayMs * 1000));
 
 			if (
 				$cursorPosition.posY + 1 >= $currentPattern.patternRows.length &&
@@ -166,11 +188,13 @@
 				$cursorPosition.posY + 1 >= $currentPattern.patternRows.length &&
 				$currentPatternIndex >= $patterns.length - 1
 			) {
-				return;
+				break;
 			} else {
 				cursorPosition.incrementYBy(1);
 			}
+
 		}
+
 	}
 
 	//	Demo modules :)
