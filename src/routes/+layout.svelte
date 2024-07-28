@@ -3,6 +3,8 @@
 	import { onMount } from 'svelte';
 	import '../app.css';
 	import { audioContext, audioNode } from '$lib/stores/audio';
+	import convertersContainer from '$lib/services/converters/converters-container';
+	import VortexModuleConverter from '$lib/services/converters/vt-converter';
 
 	onMount(async () => {
 		if (!$audioContext) {
@@ -16,6 +18,8 @@
 			});
 			$audioNode.connect($audioContext.destination);
 		}
+
+		convertersContainer.register('vt2', VortexModuleConverter);
 	});
 </script>
 

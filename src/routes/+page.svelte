@@ -4,12 +4,12 @@
 	import EditorButton from '$lib/components/EditorMenu/EditorButton.svelte';
 	import EditorMenu from '$lib/components/EditorMenu/EditorMenu.svelte';
 	import Module from '$lib/models/module';
-	import VortexModuleConverter from '$lib/services/vt-converter';
 	import {
 		allPatternRows,
 		currentPattern,
 		currentPatternIndex,
-		cursorPosition, globalCursorPosY,
+		cursorPosition,
+		globalCursorPosY,
 		patterns,
 		setCurrentModule
 	} from '$lib/stores/stores.js';
@@ -18,8 +18,11 @@
 	import { isTrackPlaying } from '$lib/stores/debug';
 	import NoteData, { Note } from '$lib/models/note-data';
 	import { audioContext, audioNode } from '$lib/stores/audio';
-	import EditorSelect, {type EditorSelectOption} from "$lib/components/EditorMenu/EditorSelect.svelte";
-	import DemoPatorDigitalEspresso from "$lib/demoModules/Pator_Digital_Espresso.vt2?raw";
+	import EditorSelect, {
+		type EditorSelectOption
+	} from '$lib/components/EditorMenu/EditorSelect.svelte';
+	import DemoPatorDigitalEspresso from '$lib/demoModules/Pator_Digital_Espresso.vt2?raw';
+	import convertersContainer from '$lib/services/converters/converters-container';
 
 	let fileLoaderInput: HTMLInputElement;
 	let unlisten: UnlistenFn;
@@ -58,7 +61,11 @@
 		if (!files || files.length === 0) return;
 
 		const file = files[0];
-		const converter = new VortexModuleConverter();
+		const extension = file.name.split('.').pop()?.toLocaleLowerCase();
+
+		if (!extension) return;
+
+		const converter = convertersContainer.resolve(extension);
 
 		const lemonModule = await converter.convertToLemonModule(
 			new Blob([file], { type: file.type })
@@ -111,14 +118,13 @@
 		const volumeParam = $audioNode.parameters.get('volume');
 		const noteDelayMs = speedDecimal * (1.0 / 50);
 
-		let isFirstPattern = true;	//	<-- Mark.
+		let isFirstPattern = true; //	<-- Mark.
 		let noteIndex = 0;
 
-		for(const pattern of $patterns.slice($currentPatternIndex)){
-			for(const [rowIndex, patternRow] of pattern.patternRows.entries()){
-
+		for (const pattern of $patterns.slice($currentPatternIndex)) {
+			for (const [rowIndex, patternRow] of pattern.patternRows.entries()) {
 				//	The first patter should start from cursor position.
-				if(isFirstPattern && rowIndex < $cursorPosition.posY){
+				if (isFirstPattern && rowIndex < $cursorPosition.posY) {
 					continue;
 				}
 
@@ -142,7 +148,7 @@
 
 				if (volumeHex) {
 					volume = parseInt(volumeHex, 16);
-					volume -= 10;	//	TODO - remove - my ears exploded
+					volume -= 10; //	TODO - remove - my ears exploded
 				}
 
 				noteData = patternRow.channelsData[0].noteData;
@@ -155,22 +161,22 @@
 					);
 				}
 
-				if(volume && volumeParam) {
-					volumeParam.setValueAtTime(volume, $audioContext.currentTime + noteIndex * noteDelayMs);
+				if (volume && volumeParam) {
+					volumeParam.setValueAtTime(
+						volume,
+						$audioContext.currentTime + noteIndex * noteDelayMs
+					);
 				}
 
 				noteIndex++;
-
 			}
 
-			if(isFirstPattern) isFirstPattern = false;	//	<--	We are out of the first pattern.
-
+			if (isFirstPattern) isFirstPattern = false; //	<--	We are out of the first pattern.
 		}
 
 		//	Visuals.
 
-		while(true){
-
+		while (true) {
 			if (!$isTrackPlaying) {
 				await $audioContext.suspend();
 				break;
@@ -192,37 +198,32 @@
 			} else {
 				cursorPosition.incrementYBy(1);
 			}
-
 		}
-
 	}
 
 	//	Demo modules :)
-	type DemoModuleOption = {file: string} & EditorSelectOption;
-	let loadDemoValue: string|undefined;
+	type DemoModuleOption = { file: string } & EditorSelectOption;
+	let loadDemoValue: string | undefined;
 	let demoModulesOptions: DemoModuleOption[] = [
-		{value: 'demo-1', label: 'Pator - Digital Espresso', file: DemoPatorDigitalEspresso}
+		{ value: 'demo-1', label: 'Pator - Digital Espresso', file: DemoPatorDigitalEspresso }
 	];
 
 	$: handleChangeDemoModule(loadDemoValue);
 
-	async function handleChangeDemoModule(value: typeof loadDemoValue){
+	async function handleChangeDemoModule(value: typeof loadDemoValue) {
+		const demoModuleOption = demoModulesOptions.find((x) => x.value === value);
+		if (!demoModuleOption) return; //	Bail early.
 
-		const demoModuleOption = demoModulesOptions.find(x => x.value === value);
-		if(!demoModuleOption) return;	//	Bail early.
-
-		const converter = new VortexModuleConverter();
+		const converter = convertersContainer.resolve('vt2');
 
 		const lemonModule = await converter.convertToLemonModule(
-			new Blob([demoModuleOption.file], {type: 'text/plain'})
+			new Blob([demoModuleOption.file], { type: 'text/plain' })
 		);
 
 		setCurrentModule(lemonModule);
 		currentPatternIndex.set(0);
 		cursorPosition.setPosition(0, 0);
-
 	}
-
 </script>
 
 <div class="flex flex-col gap-2 min-h-0">
