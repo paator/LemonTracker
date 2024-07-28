@@ -1,3 +1,4 @@
+import type Ornament from './ornament';
 import Pattern from './pattern';
 
 export default class Module {
@@ -6,7 +7,7 @@ export default class Module {
 	initSpeed: number;
 	patterns: Pattern[];
 	samples: any[];
-	ornaments: any[];
+	ornaments: Ornament[];
 
 	constructor(
 		title = '',
@@ -14,7 +15,7 @@ export default class Module {
 		initSpeed = 3,
 		patterns: Pattern[] = [new Pattern(undefined, undefined, false)],
 		samples: any[] = [],
-		ornaments: any[] = []
+		ornaments: Ornament[] = []
 	) {
 		this.title = title;
 		this.author = author;

@@ -4,6 +4,7 @@
 		cursorPosition,
 		moduleAuthor,
 		moduleTitle,
+		ornaments,
 		patterns
 	} from '$lib/stores/stores.js';
 	import PatternEditor from '$lib/components/PatternEditor/PatternEditor.svelte';
@@ -50,4 +51,7 @@
 		{/each}
 	</div>
 	<PatternEditor />
+	{#each $ornaments as ornament}
+		<div>{ornament.noteShiftValues}</div>
+	{/each}
 </div>

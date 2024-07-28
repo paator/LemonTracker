@@ -2,11 +2,13 @@ import { derived, get, writable, type Readable } from 'svelte/store';
 import Pattern from '$lib/models/pattern';
 import type Module from '$lib/models/module';
 import type VisibleRow from '$lib/models/visible-row';
+import type Ornament from '$lib/models/ornament';
 
 export const moduleTitle = writable('');
 export const moduleAuthor = writable('');
 export const moduleInitSpeed = writable(3);
 export const patterns = writable([new Pattern()]);
+export const ornaments = writable<Ornament[]>([]);
 export const currentPatternIndex = writable(0);
 export const currentPattern = derived(
 	[currentPatternIndex, patterns],
@@ -39,6 +41,7 @@ export function setCurrentModule(module: Module) {
 	moduleAuthor.set(module.author);
 	moduleInitSpeed.set(module.initSpeed);
 	patterns.set(module.patterns);
+	ornaments.set(module.ornaments);
 	cursorPosition.setPosition(0, 0);
 }
 
