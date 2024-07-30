@@ -96,7 +96,7 @@ export default class VortexModuleConverter implements ModuleConverter {
 			const ornaments: Ornament[] = [];
 			let line: IteratorResult<string, void>;
 
-			while (!peek(generator).value.done && peek(generator).value.startsWith('[Pattern')) {
+			while (!peek(generator).done && peek(generator).value.startsWith('[Pattern')) {
 				line = generator.next();
 
 				if (!line.value) continue;
@@ -112,7 +112,7 @@ export default class VortexModuleConverter implements ModuleConverter {
 
 				const ornamentValues = splittedLine?.map(Number);
 
-				ornaments.push({ noteShiftValues: ornamentValues ?? [], loopPoint: lIndex ?? 0 });
+				ornaments.push({ noteShiftValues: ornamentValues, loopPoint: lIndex });
 			}
 
 			return ornaments;
