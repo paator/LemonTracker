@@ -5,7 +5,8 @@ import PatternRow from '$lib/models/pattern-row.js';
 import ChannelRow from '$lib/models/channel-row.js';
 import type { ModuleConverter } from './module-converter';
 import type Ornament from '$lib/models/ornament';
-import { peek } from '$lib/utils/generator';
+import Sample from '$lib/models/sample';
+import type { SamplePoint } from '$lib/models/sample';
 
 type VortexMetaData = {
 	VortexTrackerII: string;
@@ -96,26 +97,73 @@ export default class VortexModuleConverter implements ModuleConverter {
 			const ornaments: Ornament[] = [];
 			let line: IteratorResult<string, void>;
 
-			while (!peek(generator).done && peek(generator).value.startsWith('[Pattern')) {
-				line = generator.next();
-
+			while (!(line = generator.next()).done) {
 				if (!line.value) continue;
+				if (line.value.startsWith('[Pattern')) break;
 				if (!line.value.startsWith('[Ornament')) continue;
 
 				const ornamentLine = generator.next().value;
-				let splittedLine = ornamentLine?.split(',') ?? [];
-				const lIndex = splittedLine?.findIndex((x) => x.includes('L'));
+				if (!ornamentLine) {
+					ornaments.push({ noteShiftValues: [], loopPoint: 0 });
+					continue;
+				}
+
+				let splittedLine = ornamentLine.split(',');
+				const lIndex = splittedLine.findIndex((x) => x.includes('L'));
 
 				if (lIndex !== -1) {
 					splittedLine[lIndex] = splittedLine[lIndex].replace('L', '');
 				}
 
-				const ornamentValues = splittedLine?.map(Number);
+				const ornamentValues = splittedLine.filter((x) => x.trim() !== '').map(Number);
 
-				ornaments.push({ noteShiftValues: ornamentValues, loopPoint: lIndex });
+				ornaments.push({
+					noteShiftValues: ornamentValues,
+					loopPoint: lIndex === -1 ? 0 : lIndex
+				});
 			}
 
 			return ornaments;
+		};
+
+		const extractSamples = (generator: Generator<string, void, string>) => {
+			const samples: Sample[] = [];
+			let line: IteratorResult<string, void>;
+
+			while (!(line = generator.next()).done) {
+				if (!line.value) continue;
+				if (line.value.startsWith('[Pattern')) break;
+				if (!line.value.startsWith('[Sample')) continue;
+
+				const samplePoints: SamplePoint[] = [];
+				let loopPoint = -1;
+
+				while (true) {
+					const sampleLine = generator.next().value;
+					if (!sampleLine || sampleLine.trim() === '') break;
+
+					const [flags, toneShift, noiseEnvShift, volume] = sampleLine.split('_');
+
+					const samplePoint: SamplePoint = {
+						tone: flags.includes('T'),
+						noise: flags.includes('N'),
+						envelope: flags.includes('E'),
+						toneShift: parseInt(toneShift, 16),
+						noiseEnvShift: parseInt(noiseEnvShift, 16),
+						volume: volume.includes('L') ? 15 : parseInt(volume, 16)
+					};
+
+					samplePoints.push(samplePoint);
+
+					if (volume.includes('L')) {
+						loopPoint = samplePoints.length - 1;
+					}
+				}
+
+				samples.push(new Sample(samplePoints, loopPoint));
+			}
+
+			return samples;
 		};
 
 		const extractPatterns = (generator: Generator<string, void, string>) => {
@@ -228,6 +276,9 @@ export default class VortexModuleConverter implements ModuleConverter {
 
 				const ornaments = extractOrnaments(generator);
 				module.ornaments = ornaments;
+
+				const samples = extractSamples(generator);
+				module.samples = samples;
 
 				const patterns = extractPatterns(generator);
 				const patternOrder = metadata['PlayOrder'].split(',');

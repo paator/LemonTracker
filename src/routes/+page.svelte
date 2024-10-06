@@ -4,13 +4,13 @@
 	import EditorButton from '$lib/components/EditorMenu/EditorButton.svelte';
 	import EditorMenu from '$lib/components/EditorMenu/EditorMenu.svelte';
 	import Module from '$lib/models/module';
-	import VortexModuleConverter from '$lib/services/converters/vt-converter';
 	import {
 		allPatternRows,
 		currentPattern,
 		currentPatternIndex,
 		cursorPosition,
 		globalCursorPosY,
+		ornaments,
 		patterns,
 		setCurrentModule
 	} from '$lib/stores/stores.js';
@@ -18,15 +18,20 @@
 	import PlayerPlayFilled from '@tabler/icons-svelte/icons/player-play-filled';
 	import { isTrackPlaying } from '$lib/stores/debug';
 	import NoteData, { Note } from '$lib/models/note-data';
-	import { audioContext, audioNode } from '$lib/stores/audio';
 	import EditorSelect, {
 		type EditorSelectOption
 	} from '$lib/components/EditorMenu/EditorSelect.svelte';
 	import DemoPatorDigitalEspresso from '$lib/demoModules/Pator_Digital_Espresso.vt2?raw';
+	import DemoMyBestTrack1 from '$lib/demoModules/MyBestTrack1.vt2?raw';
+	import DemoMmcm from '$lib/demoModules/mmcm.vt2?raw';
+	import DemoQuiteFast from '$lib/demoModules/quitefast.vt2?raw';
 	import convertersContainer from '$lib/services/converters/converters-container';
-
+	import { browser } from '$app/environment';
+	import { audioContext, audioNode } from '$lib/stores/audio';
+	import DemoBfoxSorrow from '$lib/demoModules/bfox.vt2?raw';
 	let fileLoaderInput: HTMLInputElement;
 	let unlisten: UnlistenFn;
+	let worker: Worker;
 
 	onMount(async () => {
 		const eventHandlers: Record<string, () => void> = {
@@ -42,6 +47,38 @@
 				handler();
 			}
 		});
+
+		if (browser && window.Worker) {
+			try {
+				const ayWorker = await import('$lib/services/audio/ay-worker?worker');
+				worker = new ayWorker.default();
+				worker.postMessage({ type: 'init' });
+
+				worker.onmessage = (event) => {
+					switch (event.data.type) {
+						case 'noteFrequency':
+							console.log('noteFrequency', event.data.value);
+
+							$audioNode.parameters
+								.get(`noteFrequency_${event.data.channel}`)
+								?.setValueAtTime(event.data.value, $audioContext.currentTime);
+							break;
+						case 'volume':
+							console.log('volume', event.data.value);
+							$audioNode.parameters
+								.get(`volume_${event.data.channel}`)
+								?.setValueAtTime(event.data.value, $audioContext.currentTime);
+							break;
+					}
+				};
+
+				worker.onerror = (error) => {
+					console.error('Worker error:', error);
+				};
+			} catch (error) {
+				console.error('Error initializing worker:', error);
+			}
+		}
 	});
 
 	onDestroy(() => unlisten());
@@ -81,23 +118,13 @@
 		$isTrackPlaying = !$isTrackPlaying;
 
 		if (!$isTrackPlaying) {
+			worker?.postMessage({ type: 'stop' });
 			await $audioContext.suspend();
 			return;
 		}
 
+		worker?.postMessage({ type: 'start' });
 		await $audioContext.resume();
-
-		const PT3ToneTable: number[] = [
-			0x0d10, 0x0c55, 0x0ba4, 0x0afc, 0x0a5f, 0x09ca, 0x093d, 0x08b8, 0x083b, 0x07c5, 0x0755,
-			0x06ec, 0x0688, 0x062a, 0x05d2, 0x057e, 0x052f, 0x04e5, 0x049e, 0x045c, 0x041d, 0x03e2,
-			0x03ab, 0x0376, 0x0344, 0x0315, 0x02e9, 0x02bf, 0x0298, 0x0272, 0x024f, 0x022e, 0x020f,
-			0x01f1, 0x01d5, 0x01bb, 0x01a2, 0x018b, 0x0174, 0x0160, 0x014c, 0x0139, 0x0128, 0x0117,
-			0x0107, 0x00f9, 0x00eb, 0x00dd, 0x00d1, 0x00c5, 0x00ba, 0x00b0, 0x00a6, 0x009d, 0x0094,
-			0x008c, 0x0084, 0x007c, 0x0075, 0x006f, 0x0069, 0x0063, 0x005d, 0x0058, 0x0053, 0x004e,
-			0x004a, 0x0046, 0x0042, 0x003e, 0x003b, 0x0037, 0x0034, 0x0031, 0x002f, 0x002c, 0x0029,
-			0x0027, 0x0025, 0x0023, 0x0021, 0x001f, 0x001d, 0x001c, 0x001a, 0x0019, 0x0017, 0x0016,
-			0x0015, 0x0014, 0x0012, 0x0011, 0x0010, 0x000f, 0x000e, 0x000d
-		];
 
 		const currentRow = $allPatternRows[$globalCursorPosY];
 
@@ -106,54 +133,54 @@
 		if (remainingRows.length === 0) {
 			$isTrackPlaying = false;
 			await $audioContext.suspend();
+			worker?.postMessage({ type: 'stop' });
 		}
 
 		let speedDecimal = 3;
-		let volume = 15;
-
-		const noteFreqParam = $audioNode.parameters.get('noteFrequency');
-		const volumeParam = $audioNode.parameters.get('volume');
 
 		for (const visibleRow of remainingRows) {
 			if (!$isTrackPlaying) {
 				await $audioContext.suspend();
+				worker?.postMessage({ type: 'stop' });
 				break;
 			}
 
-			let speedHex: string | null = null;
-			let volumeHex: string | null = null;
-			let noteData: NoteData = new NoteData(Note.None, 0);
+			for (let i = 0; i < visibleRow.row.channelsData.length; i++) {
+				let speedHex: string | null = null;
+				let volumeHex: string | null = null;
+				let noteData: NoteData = new NoteData(Note.None, 0);
 
-			if (visibleRow.row.channelsData[2].effect === 'B') {
-				speedHex = visibleRow.row.channelsData[2].effectParamZ;
-			} else if (visibleRow.row.channelsData[1].effect === 'B') {
-				speedHex = visibleRow.row.channelsData[1].effectParamZ;
-			} else if (visibleRow.row.channelsData[0].effect === 'B') {
-				speedHex = visibleRow.row.channelsData[0].effectParamZ;
-			}
+				if (visibleRow.row.channelsData[i].effect === 'B') {
+					speedHex = visibleRow.row.channelsData[i].effectParamZ;
+					speedDecimal = parseInt(speedHex, 16);
+				}
 
-			volumeHex = visibleRow.row.channelsData[0].volume;
+				volumeHex = visibleRow.row.channelsData[i].volume;
+				if (volumeHex) {
+					const parsedVolume = parseInt(volumeHex, 16);
+					if (!isNaN(parsedVolume)) {
+						worker?.postMessage({ type: `volume_${i}`, value: parsedVolume });
+					}
+				}
 
-			if (speedHex) {
-				speedDecimal = parseInt(speedHex, 16);
-			}
+				noteData = visibleRow.row.channelsData[i].noteData;
 
-			if (volumeHex) {
-				volume = parseInt(volumeHex, 16);
-			}
+				if (noteData) {
+					worker?.postMessage({ type: `note_${i}`, value: noteData });
+				}
 
-			noteData = visibleRow.row.channelsData[0].noteData;
-			const noteIntValue = noteData.getNoteValue();
+				const envType = visibleRow.row.channelsData[i].envelope;
+				if (envType) {
+					worker?.postMessage({ type: `envelope_${i}`, value: parseInt(envType, 16) });
+				}
 
-			if (noteIntValue) {
-				noteFreqParam?.setValueAtTime(
-					PT3ToneTable[noteIntValue],
-					$audioContext.currentTime
-				);
-			}
+				const ornament = visibleRow.row.channelsData[i].ornament;
+				if (ornament && ornament !== '.') {
+					const ornamentInt = parseInt(ornament, 32);
 
-			if (volume) {
-				volumeParam?.setValueAtTime(volume, $audioContext.currentTime);
+					const moduleOrnament = $ornaments[ornamentInt];
+					worker?.postMessage({ type: `ornament_${i}`, value: moduleOrnament });
+				}
 			}
 
 			const delay = speedDecimal * (1.0 / 50) * 1000;
@@ -180,7 +207,11 @@
 	type DemoModuleOption = { file: string } & EditorSelectOption;
 	let loadDemoValue: string | undefined;
 	let demoModulesOptions: DemoModuleOption[] = [
-		{ value: 'demo-1', label: 'Pator - Digital Espresso', file: DemoPatorDigitalEspresso }
+		{ value: 'demo-1', label: 'Pator - Digital Espresso', file: DemoPatorDigitalEspresso },
+		{ value: 'demo-2', label: 'My Best Track 1', file: DemoMyBestTrack1 },
+		{ value: 'demo-3', label: 'MmcM - ConVerS!ons', file: DemoMmcm },
+		{ value: 'demo-4', label: 'Quite Fast', file: DemoQuiteFast },
+		{ value: 'demo-5', label: 'Bfox - .sorrow.on.d!halt...realtime.ay.', file: DemoBfoxSorrow }
 	];
 
 	$: handleChangeDemoModule(loadDemoValue);

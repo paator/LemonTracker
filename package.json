@@ -37,6 +37,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@tabler/icons-svelte": "^3.7.0"
+    "@tabler/icons-svelte": "^3.7.0",
+    "@types/audioworklet": "^0.0.60"
   }
 }

@@ -393,22 +393,48 @@ class AyumiProcessor extends AudioWorkletProcessor {
 	static get parameterDescriptors() {
 		return [
 			{
-				name: 'noteFrequency',
+				name: 'noteFrequency_0',
 				defualtValue: 0
 			},
 			{
-				name: 'volume',
-				defaultValue: 15
+				name: 'noteFrequency_1',
+				defualtValue: 0
+			},
+			{
+				name: 'noteFrequency_2',
+				defualtValue: 0
+			},
+			{
+				name: 'volume_0',
+				defaultValue: 15,
+				minValue: 0,
+				maxValue: 15
+			},
+			{
+				name: 'volume_1',
+				defaultValue: 15,
+				minValue: 0,
+				maxValue: 15
+			},
+			{
+				name: 'volume_2',
+				defaultValue: 15,
+				minValue: 0,
+				maxValue: 15
 			}
 		];
 	}
 
 	process(inputs, outputs, parameters) {
 		this.ayumi.setMixer(0, 0, 1, 0);
-		this.ayumi.setMixer(1, 1, 1, 0);
-		this.ayumi.setMixer(2, 1, 1, 0);
-		this.ayumi.setVolume(0, parameters['volume']);
-		this.ayumi.setTone(0, parameters['noteFrequency']);
+		this.ayumi.setMixer(1, 0, 1, 0);
+		this.ayumi.setMixer(2, 0, 1, 0);
+		this.ayumi.setVolume(0, parameters['volume_0']);
+		this.ayumi.setVolume(1, parameters['volume_1']);
+		this.ayumi.setVolume(2, parameters['volume_2']);
+		this.ayumi.setTone(0, parameters['noteFrequency_0']);
+		this.ayumi.setTone(1, parameters['noteFrequency_1']);
+		this.ayumi.setTone(2, parameters['noteFrequency_2']);
 
 		if (outputs.length > 0 && outputs[0].length > 1) {
 			const output = outputs[0];
@@ -421,8 +447,11 @@ class AyumiProcessor extends AudioWorkletProcessor {
 
 				leftChannel[i] = this.ayumi.left;
 				rightChannel[i] = this.ayumi.right;
+
+				console.log(leftChannel[i], rightChannel[i]);
 			}
 		}
+
 		return true;
 	}
 }

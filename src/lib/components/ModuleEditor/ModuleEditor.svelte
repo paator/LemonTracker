@@ -13,6 +13,15 @@
 		$currentPatternIndex = index;
 		cursorPosition.setPosition($cursorPosition.posX, 0);
 	}
+
+	function formatNoteShiftValues(ornament) {
+		const { noteShiftValues, loopPoint } = ornament;
+		let result = noteShiftValues.slice(0, loopPoint).join(',');
+		if (loopPoint < noteShiftValues.length) {
+			result += ',[' + noteShiftValues.slice(loopPoint).join(',') + ']';
+		}
+		return result;
+	}
 </script>
 
 <div
@@ -50,8 +59,23 @@
 			</button>
 		{/each}
 	</div>
-	<PatternEditor />
-	{#each $ornaments as ornament}
-		<div>{ornament.noteShiftValues}</div>
-	{/each}
+
+	<div class="flex">
+		<!-- Ornaments section on the left -->
+		<div class="w-48 mr-4">
+			<h3 class="text-slate-300 font-semibold mb-2">Ornaments</h3>
+			<div class="space-y-2 overflow-y-auto max-h-[calc(100vh-200px)]">
+				{#each $ornaments as ornament, index}
+					<div class="bg-slate-700 p-2 rounded-md">
+						<h4 class="text-slate-300 text-sm mb-1">Ornament {index}</h4>
+						<div class="text-xs text-slate-400 break-all">
+							{formatNoteShiftValues(ornament)}
+						</div>
+					</div>
+				{/each}
+			</div>
+		</div>
+
+		<PatternEditor />
+	</div>
 </div>
